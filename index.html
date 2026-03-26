@@ -1,0 +1,1576 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Labo-lecture - gestion des fichiers et dossiers en PowerShell</title>
+<link href="style.css" rel="stylesheet"/>
+<link href="style_print.css" media="print" rel="stylesheet"/>
+<link href="unified_style.css" rel="stylesheet"/>
+<script defer="" src="script.js"></script>
+<script defer="" src="unified_script.js"></script>
+</head>
+<body id="top">
+<a aria-label="Retour en haut" class="back-to-top" href="#top">↑</a>
+<main class="document">
+<header class="document-header">
+<section aria-label="En-tête du cours" class="course-banner">
+<div class="banner-left">
+<div class="banner-photo-wrap">
+<img alt="Anis Ghaieb" class="banner-photo" src="img/anis.png"/>
+</div>
+<div class="banner-left-info">
+<p class="banner-name">Anis Ghaieb</p>
+<p class="banner-email">baniss2002@gmail.com</p>
+</div>
+</div>
+<div class="banner-center">
+<p class="banner-course">
+<span class="banner-course-line">AUTOMATISATION ET SCRIPTS</span>
+
+</p>
+</div>
+<div class="banner-right">
+<img alt="Collège Universel" class="banner-logo" src="img/college.png"/>
+<p class="banner-college">
+<span class="banner-college-main">Collège Universel</span>
+<span class="banner-college-sub">Campus Montréal</span>
+</p>
+</div>
+</section>
+<section aria-label="Équipe" class="team-panel">
+<div class="team-panel-head"><h2 class="team-panel-title">Equipe</h2></div>
+<div class="team-grid">
+<label class="team-field" for="teamMember1"><span class="team-label">Nom1 :</span><input autocomplete="off" class="team-member-input" id="teamMember1" placeholder="Nom de l’étudiant 1" type="text"/></label>
+<label class="team-field" for="teamMember2"><span class="team-label">Nom2 :</span><input autocomplete="off" class="team-member-input" id="teamMember2" placeholder="Nom de l’étudiant 2" type="text"/></label>
+<label class="team-field" for="teamMember3"><span class="team-label">Nom3 :</span><input autocomplete="off" class="team-member-input" id="teamMember3" placeholder="Nom de l’étudiant 3" type="text"/></label>
+<label class="team-field" for="teamMember4"><span class="team-label">Nom4 :</span><input autocomplete="off" class="team-member-input" id="teamMember4" placeholder="Nom de l’étudiant 4" type="text"/></label>
+</div>
+</section>
+<div aria-hidden="true" class="team-print-card" id="teamPrint"></div>
+<div class="document-hero">
+<figure class="content-figure hero-figure">
+<img alt="Illustration du chapitre" class="content-image hero-image" src="img/chap.png"/>
+</figure>
+<p class="document-kicker">PowerShell — Lecture active et mise en pratique guidée</p>
+<h1 class="document-title"><u>Labo</u></h1>
+<h1 class="document-title">Gestion des fichiers et dossiers en PowerShell</h1>
+<p class="document-intro">
+Dans ce labo-lecture, vous allez manipuler un vrai environnement de travail PowerShell sans toucher à des dossiers sensibles du système. Vous préparerez un dossier de laboratoire sûr, puis vous créerez, listrez, renommerez, déplacerez, copierez et supprimerez des dossiers et des fichiers. Vous verrez aussi comment filtrer et trier des fichiers, repérer des doublons, organiser automatiquement un dossier par type de fichier et consulter des ACL. Chaque étape importante doit être prouvée par une capture lisible avant l’export PDF.
+</p>
+</div>
+<section aria-label="Vue d’ensemble du labo" class="document-overview">
+<div class="overview-panel">
+<h2 class="overview-title">Table des matières</h2>
+<nav aria-label="Table des matières du labo" class="toc-nav">
+<ul class="toc-list"><li class="toc-item toc-level-1"><a class="toc-link" href="#partie-1">Partie 1 — Démarrage et règles du labo</a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#partie-2">Partie 2 — Préparation obligatoire de l’environnement</a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#partie-3">Partie 3 — Gestion des dossiers</a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#partie-4">Partie 4 — Gestion des fichiers</a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#partie-5">Partie 5 — Gestion avancée des fichiers et dossiers</a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#partie-6">Partie 6 — Rechercher les fichiers en double</a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#partie-7">Partie 7 — Automatiser le rangement des fichiers par type</a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#partie-8">Partie 8 — Permissions des fichiers et dossiers</a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#partie-9">Partie 9 — Bilan final</a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#partie-qcm">QCM de validation</a></li><li class="toc-item toc-level-1 toc-item-export"><a class="toc-link" href="#export">Exportation en PDF</a></li></ul>
+</nav>
+</div>
+<div class="overview-panel">
+<h2 class="overview-title">Objectifs du labo</h2>
+<ul class="goal-list"><li>Créer, lister, renommer, déplacer, copier et supprimer des dossiers en PowerShell.</li><li>Créer, lire, modifier, rechercher, déplacer, copier et supprimer des fichiers.</li><li>Utiliser des filtres, des tris et des recherches simples sur le système de fichiers.</li><li>Repérer des doublons avec Get-FileHash et simuler une suppression sûre avec -WhatIf.</li><li>Consulter des ACL et appliquer des permissions dans un dossier de laboratoire sécurisé.</li></ul>
+</div>
+</section>
+</header>
+<section class="part" id="partie-1">
+<div class="part-header"><h2 class="part-title">Partie 1 — Démarrage et règles du labo</h2></div>
+<div class="part-body">
+<section class="section-block line-section">
+<h3 class="section-title" id="p1-s1">Ce que vous allez faire</h3>
+<div class="section-body">
+<p>Ce TP-lecture est la version prête à utiliser du support sur la gestion des fichiers et des dossiers en PowerShell. Ce TP est faisable sur une machine Windows ordinaire sans droits administrateur, tout en restant compatible avec la leçon.</p>
+<p>Vous devez réaliser les commandes dans <strong>Windows PowerShell</strong> ou <strong>PowerShell 7</strong>. Travaillez uniquement dans le dossier de laboratoire proposé dans ce document. Ne faites aucune manipulation dans <strong>C:\Windows</strong>, <strong>C:\Program Files</strong>, <strong>C:\Users\Public</strong> ou dans vos vrais dossiers personnels importants.</p>
+<ul><li>Créer, lister, renommer, déplacer, copier et supprimer des dossiers.</li><li>Créer, lire, écrire, rechercher, déplacer, copier et supprimer des fichiers.</li><li>Filtrer et trier des fichiers avec PowerShell.</li><li>Repérer des fichiers en double.</li><li>Organiser automatiquement des fichiers par type.</li><li>Consulter une ACL et copier les permissions d’un fichier vers un autre.</li></ul>
+</div>
+</section>
+<section class="section-block line-section">
+<h3 class="section-title" id="p1-s2">Avant de commencer</h3>
+<div class="section-body">
+<p>Avant de commencer, ouvrez le menu <strong>Démarrer</strong>, tapez <strong>PowerShell</strong>, puis ouvrez <strong>Windows PowerShell</strong>. Laissez la fenêtre ouverte pendant toute l’activité.</p>
+<div class="callout spaced-block"><strong>Règle très importante :</strong> Toutes les commandes de ce TP doivent être exécutées dans le dossier suivant : <code>$LabRoot = "$env:USERPROFILE\Documents\TP7_FichiersDossiers"</code>. Ce dossier se trouve dans <strong>Documents</strong> de votre session Windows. Ainsi, vous évitez les erreurs de permission et vous protégez vos vrais fichiers.</div>
+<section class="snippet-embed">
+<section class="code-window theme-powershell">
+<div class="window-header">
+<div class="window-controls"><span></span><span></span><span></span></div>
+<div class="window-title">labroot.ps1</div>
+<button class="copy-btn" data-copy-mode="plain" data-copy-target="ps-labroot" type="button">Copier</button>
+</div>
+<div class="code-body">
+<div class="terminal-intro">PS C:\Users\Etudiant&gt;</div>
+<div class="code-content" id="ps-labroot">
+<div class="line" data-copy="$LabRoot = &quot;$env:USERPROFILE\Documents\TP7_FichiersDossiers&quot;"><span class="line-no">1</span><span class="line-text">$LabRoot = &quot;$env:USERPROFILE\Documents\TP7_FichiersDossiers&quot;</span></div>
+</div>
+</div>
+</section>
+</section>
+<div class="callout spaced-block">
+<strong>À saisir :</strong> Expliquez en deux ou trois lignes pourquoi le fait de travailler dans un dossier de laboratoire séparé réduit les risques d’erreur.
+<div class="answer-area">
+<textarea class="team-input answerbox-large" id="p1-answer" placeholder="Écris ici ta réponse..."></textarea>
+</div>
+</div>
+</div>
+</section>
+</div>
+</section>
+<section class="part" id="partie-2">
+<div class="part-header"><h2 class="part-title">Partie 2 — Préparation obligatoire de l’environnement</h2></div>
+<div class="part-body">
+<section class="section-block line-section">
+<h3 class="section-title" id="p2-s1">Préparer l’environnement de travail</h3>
+<div class="section-body">
+<p>Avant de commencer les tâches, exécutez tout le bloc suivant. Il prépare un environnement de travail complet et remet le labo à zéro si vous l’avez déjà lancé une première fois.</p>
+<section class="snippet-embed">
+<section class="code-window theme-powershell">
+<div class="window-header">
+<div class="window-controls"><span></span><span></span><span></span></div>
+<div class="window-title">preparation_lab.ps1</div>
+<button class="copy-btn" data-copy-mode="plain" data-copy-target="ps-preparation" type="button">Copier</button>
+</div>
+<div class="code-body">
+<div class="terminal-intro">PS C:\Users\Etudiant&gt;</div>
+<div class="code-content" id="ps-preparation">
+<div class="line" data-copy="$LabRoot = &quot;$env:USERPROFILE\Documents\TP7_FichiersDossiers&quot;"><span class="line-no">1</span><span class="line-text">$LabRoot = &quot;$env:USERPROFILE\Documents\TP7_FichiersDossiers&quot;</span></div>
+<div class="line" data-copy=""><span class="line-no">2</span><span class="line-text"> </span></div>
+<div class="line" data-copy="# repartir de zéro"><span class="line-no">3</span><span class="line-text"># repartir de zéro</span></div>
+<div class="line" data-copy="if (Test-Path $LabRoot) {"><span class="line-no">4</span><span class="line-text">if (Test-Path $LabRoot) {</span></div>
+<div class="line" data-copy="    Remove-Item $LabRoot -Recurse -Force"><span class="line-no">5</span><span class="line-text">    Remove-Item $LabRoot -Recurse -Force</span></div>
+<div class="line" data-copy="}"><span class="line-no">6</span><span class="line-text">}</span></div>
+<div class="line" data-copy=""><span class="line-no">7</span><span class="line-text"> </span></div>
+<div class="line" data-copy="# dossiers principaux"><span class="line-no">8</span><span class="line-text"># dossiers principaux</span></div>
+<div class="line" data-copy="New-Item -Path $LabRoot -ItemType Directory | Out-Null"><span class="line-no">9</span><span class="line-text">New-Item -Path $LabRoot -ItemType Directory | Out-Null</span></div>
+<div class="line" data-copy="New-Item -Path &quot;$LabRoot\dossiers_source&quot; -ItemType Directory | Out-Null"><span class="line-no">10</span><span class="line-text">New-Item -Path &quot;$LabRoot\dossiers_source&quot; -ItemType Directory | Out-Null</span></div>
+<div class="line" data-copy="New-Item -Path &quot;$LabRoot\dossiers_cible&quot; -ItemType Directory | Out-Null"><span class="line-no">11</span><span class="line-text">New-Item -Path &quot;$LabRoot\dossiers_cible&quot; -ItemType Directory | Out-Null</span></div>
+<div class="line" data-copy="New-Item -Path &quot;$LabRoot\fichiers_source&quot; -ItemType Directory | Out-Null"><span class="line-no">12</span><span class="line-text">New-Item -Path &quot;$LabRoot\fichiers_source&quot; -ItemType Directory | Out-Null</span></div>
+<div class="line" data-copy="New-Item -Path &quot;$LabRoot\fichiers_cible&quot; -ItemType Directory | Out-Null"><span class="line-no">13</span><span class="line-text">New-Item -Path &quot;$LabRoot\fichiers_cible&quot; -ItemType Directory | Out-Null</span></div>
+<div class="line" data-copy="New-Item -Path &quot;$LabRoot\logs&quot; -ItemType Directory | Out-Null"><span class="line-no">14</span><span class="line-text">New-Item -Path &quot;$LabRoot\logs&quot; -ItemType Directory | Out-Null</span></div>
+<div class="line" data-copy="New-Item -Path &quot;$LabRoot\rapport&quot; -ItemType Directory | Out-Null"><span class="line-no">15</span><span class="line-text">New-Item -Path &quot;$LabRoot\rapport&quot; -ItemType Directory | Out-Null</span></div>
+<div class="line" data-copy="New-Item -Path &quot;$LabRoot\photos&quot; -ItemType Directory | Out-Null"><span class="line-no">16</span><span class="line-text">New-Item -Path &quot;$LabRoot\photos&quot; -ItemType Directory | Out-Null</span></div>
+<div class="line" data-copy="New-Item -Path &quot;$LabRoot\downloads_test&quot; -ItemType Directory | Out-Null"><span class="line-no">17</span><span class="line-text">New-Item -Path &quot;$LabRoot\downloads_test&quot; -ItemType Directory | Out-Null</span></div>
+<div class="line" data-copy="New-Item -Path &quot;$LabRoot\archives&quot; -ItemType Directory | Out-Null"><span class="line-no">18</span><span class="line-text">New-Item -Path &quot;$LabRoot\archives&quot; -ItemType Directory | Out-Null</span></div>
+<div class="line" data-copy=""><span class="line-no">19</span><span class="line-text"> </span></div>
+<div class="line" data-copy="# sous-dossiers pour les exercices sur les dossiers"><span class="line-no">20</span><span class="line-text"># sous-dossiers pour les exercices sur les dossiers</span></div>
+<div class="line" data-copy="New-Item -Path &quot;$LabRoot\dossiers_source\MesImages&quot; -ItemType Directory | Out-Null"><span class="line-no">21</span><span class="line-text">New-Item -Path &quot;$LabRoot\dossiers_source\MesImages&quot; -ItemType Directory | Out-Null</span></div>
+<div class="line" data-copy="New-Item -Path &quot;$LabRoot\dossiers_source\PDF&quot; -ItemType Directory | Out-Null"><span class="line-no">22</span><span class="line-text">New-Item -Path &quot;$LabRoot\dossiers_source\PDF&quot; -ItemType Directory | Out-Null</span></div>
+<div class="line" data-copy="New-Item -Path &quot;$LabRoot\dossiers_source\Word&quot; -ItemType Directory | Out-Null"><span class="line-no">23</span><span class="line-text">New-Item -Path &quot;$LabRoot\dossiers_source\Word&quot; -ItemType Directory | Out-Null</span></div>
+<div class="line" data-copy="New-Item -Path &quot;$LabRoot\dossiers_source\Word\ancien&quot; -ItemType Directory | Out-Null"><span class="line-no">24</span><span class="line-text">New-Item -Path &quot;$LabRoot\dossiers_source\Word\ancien&quot; -ItemType Directory | Out-Null</span></div>
+<div class="line" data-copy=""><span class="line-no">25</span><span class="line-text"> </span></div>
+<div class="line" data-copy="# fichiers de test"><span class="line-no">26</span><span class="line-text"># fichiers de test</span></div>
+<div class="line" data-copy="Set-Content -Path &quot;$LabRoot\logs\journal.txt&quot; -Value &quot;Ligne 1`r`nLigne 2&quot;"><span class="line-no">27</span><span class="line-text">Set-Content -Path &quot;$LabRoot\logs\journal.txt&quot; -Value &quot;Ligne 1`r`nLigne 2&quot;</span></div>
+<div class="line" data-copy="Set-Content -Path &quot;$LabRoot\fichiers_source\rapport_vente.txt&quot; -Value &quot;rapport de vente&quot;"><span class="line-no">28</span><span class="line-text">Set-Content -Path &quot;$LabRoot\fichiers_source\rapport_vente.txt&quot; -Value &quot;rapport de vente&quot;</span></div>
+<div class="line" data-copy="Set-Content -Path &quot;$LabRoot\fichiers_source\note_temp.txt&quot; -Value &quot;fichier temporaire&quot;"><span class="line-no">29</span><span class="line-text">Set-Content -Path &quot;$LabRoot\fichiers_source\note_temp.txt&quot; -Value &quot;fichier temporaire&quot;</span></div>
+<div class="line" data-copy="Set-Content -Path &quot;$LabRoot\fichiers_source\liste.log&quot; -Value &quot;erreur 1&quot;"><span class="line-no">30</span><span class="line-text">Set-Content -Path &quot;$LabRoot\fichiers_source\liste.log&quot; -Value &quot;erreur 1&quot;</span></div>
+<div class="line" data-copy="Set-Content -Path &quot;$LabRoot\fichiers_source\ancien_nom.txt&quot; -Value &quot;ancien nom&quot;"><span class="line-no">31</span><span class="line-text">Set-Content -Path &quot;$LabRoot\fichiers_source\ancien_nom.txt&quot; -Value &quot;ancien nom&quot;</span></div>
+<div class="line" data-copy="Set-Content -Path &quot;$LabRoot\fichiers_source\source_acl.txt&quot; -Value &quot;source acl&quot;"><span class="line-no">32</span><span class="line-text">Set-Content -Path &quot;$LabRoot\fichiers_source\source_acl.txt&quot; -Value &quot;source acl&quot;</span></div>
+<div class="line" data-copy="Set-Content -Path &quot;$LabRoot\fichiers_source\cible_acl.txt&quot; -Value &quot;cible acl&quot;"><span class="line-no">33</span><span class="line-text">Set-Content -Path &quot;$LabRoot\fichiers_source\cible_acl.txt&quot; -Value &quot;cible acl&quot;</span></div>
+<div class="line" data-copy=""><span class="line-no">34</span><span class="line-text"> </span></div>
+<div class="line" data-copy="# fichiers pour les filtres et tris"><span class="line-no">35</span><span class="line-text"># fichiers pour les filtres et tris</span></div>
+<div class="line" data-copy="Set-Content -Path &quot;$LabRoot\downloads_test\image1.jpg&quot; -Value &quot;jpg&quot;"><span class="line-no">36</span><span class="line-text">Set-Content -Path &quot;$LabRoot\downloads_test\image1.jpg&quot; -Value &quot;jpg&quot;</span></div>
+<div class="line" data-copy="Set-Content -Path &quot;$LabRoot\downloads_test\image2.png&quot; -Value &quot;png&quot;"><span class="line-no">37</span><span class="line-text">Set-Content -Path &quot;$LabRoot\downloads_test\image2.png&quot; -Value &quot;png&quot;</span></div>
+<div class="line" data-copy="Set-Content -Path &quot;$LabRoot\downloads_test\doc1.pdf&quot; -Value &quot;pdf&quot;"><span class="line-no">38</span><span class="line-text">Set-Content -Path &quot;$LabRoot\downloads_test\doc1.pdf&quot; -Value &quot;pdf&quot;</span></div>
+<div class="line" data-copy="Set-Content -Path &quot;$LabRoot\downloads_test\doc2.docx&quot; -Value &quot;docx&quot;"><span class="line-no">39</span><span class="line-text">Set-Content -Path &quot;$LabRoot\downloads_test\doc2.docx&quot; -Value &quot;docx&quot;</span></div>
+<div class="line" data-copy="Set-Content -Path &quot;$LabRoot\downloads_test\notes.txt&quot; -Value &quot;texte&quot;"><span class="line-no">40</span><span class="line-text">Set-Content -Path &quot;$LabRoot\downloads_test\notes.txt&quot; -Value &quot;texte&quot;</span></div>
+<div class="line" data-copy=""><span class="line-no">41</span><span class="line-text"> </span></div>
+<div class="line" data-copy="# fichier plus grand pour le filtre par taille"><span class="line-no">42</span><span class="line-text"># fichier plus grand pour le filtre par taille</span></div>
+<div class="line" data-copy="&quot;A&quot; * 5000 | Set-Content -Path &quot;$LabRoot\fichiers_source\gros_fichier.txt&quot;"><span class="line-no">43</span><span class="line-text">&quot;A&quot; * 5000 | Set-Content -Path &quot;$LabRoot\fichiers_source\gros_fichier.txt&quot;</span></div>
+<div class="line" data-copy=""><span class="line-no">44</span><span class="line-text"> </span></div>
+<div class="line" data-copy="# doublons pour l&#x27;exercice sur le hash"><span class="line-no">45</span><span class="line-text"># doublons pour l&#x27;exercice sur le hash</span></div>
+<div class="line" data-copy="Set-Content -Path &quot;$LabRoot\photos\photo1.txt&quot; -Value &quot;meme contenu&quot;"><span class="line-no">46</span><span class="line-text">Set-Content -Path &quot;$LabRoot\photos\photo1.txt&quot; -Value &quot;meme contenu&quot;</span></div>
+<div class="line" data-copy="Copy-Item &quot;$LabRoot\photos\photo1.txt&quot; &quot;$LabRoot\photos\photo1_copie.txt&quot;"><span class="line-no">47</span><span class="line-text">Copy-Item &quot;$LabRoot\photos\photo1.txt&quot; &quot;$LabRoot\photos\photo1_copie.txt&quot;</span></div>
+<div class="line" data-copy="Set-Content -Path &quot;$LabRoot\photos\photo2.txt&quot; -Value &quot;contenu différent&quot;"><span class="line-no">48</span><span class="line-text">Set-Content -Path &quot;$LabRoot\photos\photo2.txt&quot; -Value &quot;contenu différent&quot;</span></div>
+<div class="line" data-copy=""><span class="line-no">49</span><span class="line-text"> </span></div>
+<div class="line" data-copy="# se placer dans le dossier du labo"><span class="line-no">50</span><span class="line-text"># se placer dans le dossier du labo</span></div>
+<div class="line" data-copy="Set-Location -Path $LabRoot"><span class="line-no">51</span><span class="line-text">Set-Location -Path $LabRoot</span></div>
+<div class="line" data-copy="Get-ChildItem"><span class="line-no">52</span><span class="line-text">Get-ChildItem</span></div>
+</div>
+</div>
+</section>
+</section>
+<div class="resultblock">
+<div aria-label="Affichage sur écran" class="pcframe screen-m">
+<img alt="Écran PC" src="img/pc.png"/>
+<div class="pcinner">
+<pre class="shell resultpre">Mode                LastWriteTime         Length Name
+----                -------------         ------ ----
+d-----        ...                           archives
+d-----        ...                           dossiers_cible
+d-----        ...                           dossiers_source
+d-----        ...                           downloads_test
+d-----        ...                           fichiers_cible
+d-----        ...                           fichiers_source
+d-----        ...                           logs
+d-----        ...                           photos
+d-----        ...                           rapport</pre>
+</div>
+</div>
+</div>
+<div class="proof callout spaced-block" data-proof-id="cap01">
+<div class="proof-head">
+<div><strong>Capture obligatoire :</strong> montrez la fin de l’exécution du script de préparation, le chemin du dossier de travail et la liste des dossiers créés.</div>
+</div>
+<div class="proof-body" tabindex="0" title="Cliquez ici puis collez une image depuis le presse-papiers avec Ctrl+V">
+<div class="proofEmpty"><button class="btnCapture proofInsertLink" type="button">Insérer</button> ici la capture demandée.<div class="proofPasteHint">ou collez une image enregistrée dans le presse-papiers avec Ctrl+V.</div></div>
+<img alt="Capture de l’étudiant" class="proofImg"/>
+<input accept="image/*" class="proofFile" hidden="" type="file"/>
+<div class="proofBodyActions"><button class="btnClear proofRemoveLink" type="button">retirer la capture</button></div>
+</div>
+</div>
+<div class="callout spaced-block"><strong>Si ça bloque :</strong> Si vous voyez une erreur liée à un fichier déjà existant, relancez d’abord le bloc complet de préparation. Si vous ne voyez pas le chemin attendu, tapez <code>Get-Location</code>.</div>
+<div class="callout spaced-block">
+<strong>À saisir :</strong> Indiquez en une ou deux phrases pourquoi ce bloc de préparation est important avant de commencer les manipulations sur les dossiers et les fichiers.
+<div class="answer-area">
+<textarea class="team-input answerbox-large" id="p2-answer" placeholder="Écris ici ta réponse..."></textarea>
+</div>
+</div>
+</div>
+</section>
+</div>
+</section>
+<section class="part" id="partie-3">
+<div class="part-header"><h2 class="part-title">Partie 3 — Gestion des dossiers</h2></div>
+<div class="part-body">
+<section class="section-block line-section">
+<h3 class="section-title" id="p3-s1">Manipuler les dossiers en toute sécurité</h3>
+<div class="section-body">
+<p>Cette partie porte sur la gestion des dossiers : création, liste, renommage, suppression, déplacement et copie. Chaque manipulation doit être faite dans <strong>$LabRoot</strong> seulement.</p><section class="subsection-block">
+<h4 class="subsection-title">4.1 Créer un dossier</h4>
+<div class="subsection-body">
+<p><strong>4.1</strong> — Créez un dossier nommé <strong>Logfiles</strong> dans votre dossier de laboratoire, puis vérifiez qu’il existe.</p>
+<section class="snippet-embed">
+<section class="code-window theme-powershell">
+<div class="window-header">
+<div class="window-controls"><span></span><span></span><span></span></div>
+<div class="window-title">4.1.ps1</div>
+<button class="copy-btn" data-copy-mode="plain" data-copy-target="dossiers-4-1" type="button">Copier</button>
+</div>
+<div class="code-body">
+<div class="terminal-intro">PS C:\Users\Etudiant&gt;</div>
+<div class="code-content" id="dossiers-4-1">
+<div class="line" data-copy="New-Item -Path $LabRoot -Name &quot;Logfiles&quot; -ItemType Directory"><span class="line-no">1</span><span class="line-text">New-Item -Path $LabRoot -Name &quot;Logfiles&quot; -ItemType Directory</span></div>
+<div class="line" data-copy="Get-ChildItem -Path $LabRoot -Directory"><span class="line-no">2</span><span class="line-text">Get-ChildItem -Path $LabRoot -Directory</span></div>
+</div>
+</div>
+</section>
+</section>
+<div class="proof callout spaced-block" data-proof-id="cap02">
+<div class="proof-head">
+<div><strong>Capture obligatoire :</strong> montrez la commande de création et la liste contenant <strong>Logfiles</strong>.</div>
+</div>
+<div class="proof-body" tabindex="0" title="Cliquez ici puis collez une image depuis le presse-papiers avec Ctrl+V">
+<div class="proofEmpty"><button class="btnCapture proofInsertLink" type="button">Insérer</button> ici la capture demandée.<div class="proofPasteHint">ou collez une image enregistrée dans le presse-papiers avec Ctrl+V.</div></div>
+<img alt="Capture de l’étudiant" class="proofImg"/>
+<input accept="image/*" class="proofFile" hidden="" type="file"/>
+<div class="proofBodyActions"><button class="btnClear proofRemoveLink" type="button">retirer la capture</button></div>
+</div>
+</div>
+<div class="callout spaced-block"><strong>Attention :</strong> Si <strong>Logfiles</strong> existe déjà, supprimez-le d’abord ou changez son nom.</div>
+</div>
+</section><section class="subsection-block">
+<h4 class="subsection-title">4.2 Lister uniquement les dossiers</h4>
+<div class="subsection-body">
+<p><strong>4.2</strong> — Affichez uniquement les dossiers de <strong>dossiers_source</strong>, puis affichez ensuite tous les éléments du dossier de laboratoire.</p>
+<section class="snippet-embed">
+<section class="code-window theme-powershell">
+<div class="window-header">
+<div class="window-controls"><span></span><span></span><span></span></div>
+<div class="window-title">4.2.ps1</div>
+<button class="copy-btn" data-copy-mode="plain" data-copy-target="dossiers-4-2" type="button">Copier</button>
+</div>
+<div class="code-body">
+<div class="terminal-intro">PS C:\Users\Etudiant&gt;</div>
+<div class="code-content" id="dossiers-4-2">
+<div class="line" data-copy="Get-ChildItem -Path &quot;$LabRoot\dossiers_source&quot; -Directory"><span class="line-no">1</span><span class="line-text">Get-ChildItem -Path &quot;$LabRoot\dossiers_source&quot; -Directory</span></div>
+<div class="line" data-copy="Get-ChildItem -Path $LabRoot"><span class="line-no">2</span><span class="line-text">Get-ChildItem -Path $LabRoot</span></div>
+</div>
+</div>
+</section>
+</section>
+<div class="resultblock">
+<div aria-label="Affichage sur écran" class="pcframe screen-m">
+<img alt="Écran PC" src="img/pc.png"/>
+<div class="pcinner">
+<pre class="shell resultpre">Dossiers seulement :
+MesImages
+PDF
+Word
+
+Tous les éléments du labo :
+archives
+dossiers_cible
+dossiers_source
+downloads_test
+fichiers_cible
+fichiers_source
+logs
+photos
+rapport</pre>
+</div>
+</div>
+</div>
+<div class="proof callout spaced-block" data-proof-id="cap03">
+<div class="proof-head">
+<div><strong>Capture obligatoire :</strong> montrez la différence entre la liste avec <strong>-Directory</strong> et la liste complète.</div>
+</div>
+<div class="proof-body" tabindex="0" title="Cliquez ici puis collez une image depuis le presse-papiers avec Ctrl+V">
+<div class="proofEmpty"><button class="btnCapture proofInsertLink" type="button">Insérer</button> ici la capture demandée.<div class="proofPasteHint">ou collez une image enregistrée dans le presse-papiers avec Ctrl+V.</div></div>
+<img alt="Capture de l’étudiant" class="proofImg"/>
+<input accept="image/*" class="proofFile" hidden="" type="file"/>
+<div class="proofBodyActions"><button class="btnClear proofRemoveLink" type="button">retirer la capture</button></div>
+</div>
+</div>
+<div class="callout spaced-block"><strong>Indication anti-blocage :</strong> Si rien ne s’affiche, revérifiez que vous avez bien exécuté la préparation.</div>
+</div>
+</section><section class="subsection-block">
+<h4 class="subsection-title">4.3 Renommer un dossier</h4>
+<div class="subsection-body">
+<p><strong>4.3</strong> — Renommez <strong>MesImages</strong> en <strong>PhotosVacances</strong>, puis vérifiez le résultat.</p>
+<section class="snippet-embed">
+<section class="code-window theme-powershell">
+<div class="window-header">
+<div class="window-controls"><span></span><span></span><span></span></div>
+<div class="window-title">4.3.ps1</div>
+<button class="copy-btn" data-copy-mode="plain" data-copy-target="dossiers-4-3" type="button">Copier</button>
+</div>
+<div class="code-body">
+<div class="terminal-intro">PS C:\Users\Etudiant&gt;</div>
+<div class="code-content" id="dossiers-4-3">
+<div class="line" data-copy="Rename-Item -Path &quot;$LabRoot\dossiers_source\MesImages&quot; -NewName &quot;PhotosVacances&quot;"><span class="line-no">1</span><span class="line-text">Rename-Item -Path &quot;$LabRoot\dossiers_source\MesImages&quot; -NewName &quot;PhotosVacances&quot;</span></div>
+<div class="line" data-copy="Get-ChildItem -Path &quot;$LabRoot\dossiers_source&quot; -Directory"><span class="line-no">2</span><span class="line-text">Get-ChildItem -Path &quot;$LabRoot\dossiers_source&quot; -Directory</span></div>
+</div>
+</div>
+</section>
+</section>
+<div class="proof callout spaced-block" data-proof-id="cap04">
+<div class="proof-head">
+<div><strong>Capture obligatoire :</strong> montrez le nouveau nom <strong>PhotosVacances</strong>.</div>
+</div>
+<div class="proof-body" tabindex="0" title="Cliquez ici puis collez une image depuis le presse-papiers avec Ctrl+V">
+<div class="proofEmpty"><button class="btnCapture proofInsertLink" type="button">Insérer</button> ici la capture demandée.<div class="proofPasteHint">ou collez une image enregistrée dans le presse-papiers avec Ctrl+V.</div></div>
+<img alt="Capture de l’étudiant" class="proofImg"/>
+<input accept="image/*" class="proofFile" hidden="" type="file"/>
+<div class="proofBodyActions"><button class="btnClear proofRemoveLink" type="button">retirer la capture</button></div>
+</div>
+</div>
+<div class="callout spaced-block"><strong>Attention :</strong> <code>Rename-Item</code> change seulement le nom. Il ne déplace pas le dossier.</div>
+</div>
+</section><section class="subsection-block">
+<h4 class="subsection-title">4.4 Supprimer un dossier vide</h4>
+<div class="subsection-body">
+<p><strong>4.4</strong> — Créez d’abord un dossier vide nommé <strong>A_supprimer</strong>, puis supprimez-le.</p>
+<section class="snippet-embed">
+<section class="code-window theme-powershell">
+<div class="window-header">
+<div class="window-controls"><span></span><span></span><span></span></div>
+<div class="window-title">4.4.ps1</div>
+<button class="copy-btn" data-copy-mode="plain" data-copy-target="dossiers-4-4" type="button">Copier</button>
+</div>
+<div class="code-body">
+<div class="terminal-intro">PS C:\Users\Etudiant&gt;</div>
+<div class="code-content" id="dossiers-4-4">
+<div class="line" data-copy="New-Item -Path &quot;$LabRoot\dossiers_source\A_supprimer&quot; -ItemType Directory"><span class="line-no">1</span><span class="line-text">New-Item -Path &quot;$LabRoot\dossiers_source\A_supprimer&quot; -ItemType Directory</span></div>
+<div class="line" data-copy="Remove-Item -Path &quot;$LabRoot\dossiers_source\A_supprimer&quot;"><span class="line-no">2</span><span class="line-text">Remove-Item -Path &quot;$LabRoot\dossiers_source\A_supprimer&quot;</span></div>
+</div>
+</div>
+</section>
+</section>
+<div class="proof callout spaced-block" data-proof-id="cap05">
+<div class="proof-head">
+<div><strong>Capture obligatoire :</strong> montrez la création puis la suppression du dossier vide.</div>
+</div>
+<div class="proof-body" tabindex="0" title="Cliquez ici puis collez une image depuis le presse-papiers avec Ctrl+V">
+<div class="proofEmpty"><button class="btnCapture proofInsertLink" type="button">Insérer</button> ici la capture demandée.<div class="proofPasteHint">ou collez une image enregistrée dans le presse-papiers avec Ctrl+V.</div></div>
+<img alt="Capture de l’étudiant" class="proofImg"/>
+<input accept="image/*" class="proofFile" hidden="" type="file"/>
+<div class="proofBodyActions"><button class="btnClear proofRemoveLink" type="button">retirer la capture</button></div>
+</div>
+</div>
+<div class="callout spaced-block"><strong>Indication anti-blocage :</strong> Si PowerShell dit que le dossier n’existe pas, recréez-le avant la suppression.</div>
+</div>
+</section><section class="subsection-block">
+<h4 class="subsection-title">4.5 Supprimer un dossier avec son contenu</h4>
+<div class="subsection-body">
+<p><strong>4.5</strong> — Simulez d’abord la suppression du dossier <strong>Word</strong> avec <strong>-WhatIf</strong>, puis effectuez la vraie suppression et vérifiez qu’il a disparu.</p>
+<section class="snippet-embed">
+<section class="code-window theme-powershell">
+<div class="window-header">
+<div class="window-controls"><span></span><span></span><span></span></div>
+<div class="window-title">4.5.ps1</div>
+<button class="copy-btn" data-copy-mode="plain" data-copy-target="dossiers-4-5" type="button">Copier</button>
+</div>
+<div class="code-body">
+<div class="terminal-intro">PS C:\Users\Etudiant&gt;</div>
+<div class="code-content" id="dossiers-4-5">
+<div class="line" data-copy="Remove-Item -Path &quot;$LabRoot\dossiers_source\Word&quot; -Recurse -Force -WhatIf"><span class="line-no">1</span><span class="line-text">Remove-Item -Path &quot;$LabRoot\dossiers_source\Word&quot; -Recurse -Force -WhatIf</span></div>
+<div class="line" data-copy="Remove-Item -Path &quot;$LabRoot\dossiers_source\Word&quot; -Recurse -Force"><span class="line-no">2</span><span class="line-text">Remove-Item -Path &quot;$LabRoot\dossiers_source\Word&quot; -Recurse -Force</span></div>
+<div class="line" data-copy="Get-ChildItem -Path &quot;$LabRoot\dossiers_source&quot; -Directory"><span class="line-no">3</span><span class="line-text">Get-ChildItem -Path &quot;$LabRoot\dossiers_source&quot; -Directory</span></div>
+</div>
+</div>
+</section>
+</section>
+<div class="proof callout spaced-block" data-proof-id="cap06">
+<div class="proof-head">
+<div><strong>Capture obligatoire :</strong> montrez d’abord la simulation avec <strong>-WhatIf</strong>, puis le résultat final.</div>
+</div>
+<div class="proof-body" tabindex="0" title="Cliquez ici puis collez une image depuis le presse-papiers avec Ctrl+V">
+<div class="proofEmpty"><button class="btnCapture proofInsertLink" type="button">Insérer</button> ici la capture demandée.<div class="proofPasteHint">ou collez une image enregistrée dans le presse-papiers avec Ctrl+V.</div></div>
+<img alt="Capture de l’étudiant" class="proofImg"/>
+<input accept="image/*" class="proofFile" hidden="" type="file"/>
+<div class="proofBodyActions"><button class="btnClear proofRemoveLink" type="button">retirer la capture</button></div>
+</div>
+</div>
+<div class="callout spaced-block"><strong>Attention :</strong> N’enlevez jamais <strong>-WhatIf</strong> sur un vrai dossier personnel. Dans ce TP, c’est autorisé seulement parce que vous travaillez dans votre dossier de laboratoire.</div>
+</div>
+</section><section class="subsection-block">
+<h4 class="subsection-title">4.6 Déplacer un dossier</h4>
+<div class="subsection-body">
+<p><strong>4.6</strong> — Déplacez <strong>PhotosVacances</strong> vers <strong>dossiers_cible</strong>, puis vérifiez le résultat.</p>
+<section class="snippet-embed">
+<section class="code-window theme-powershell">
+<div class="window-header">
+<div class="window-controls"><span></span><span></span><span></span></div>
+<div class="window-title">4.6.ps1</div>
+<button class="copy-btn" data-copy-mode="plain" data-copy-target="dossiers-4-6" type="button">Copier</button>
+</div>
+<div class="code-body">
+<div class="terminal-intro">PS C:\Users\Etudiant&gt;</div>
+<div class="code-content" id="dossiers-4-6">
+<div class="line" data-copy="Move-Item -Path &quot;$LabRoot\dossiers_source\PhotosVacances&quot; -Destination &quot;$LabRoot\dossiers_cible&quot;"><span class="line-no">1</span><span class="line-text">Move-Item -Path &quot;$LabRoot\dossiers_source\PhotosVacances&quot; -Destination &quot;$LabRoot\dossiers_cible&quot;</span></div>
+<div class="line" data-copy="Get-ChildItem -Path &quot;$LabRoot\dossiers_cible&quot; -Directory"><span class="line-no">2</span><span class="line-text">Get-ChildItem -Path &quot;$LabRoot\dossiers_cible&quot; -Directory</span></div>
+</div>
+</div>
+</section>
+</section>
+<div class="proof callout spaced-block" data-proof-id="cap07">
+<div class="proof-head">
+<div><strong>Capture obligatoire :</strong> montrez que le dossier n’est plus dans <strong>dossiers_source</strong> et qu’il est maintenant dans <strong>dossiers_cible</strong>.</div>
+</div>
+<div class="proof-body" tabindex="0" title="Cliquez ici puis collez une image depuis le presse-papiers avec Ctrl+V">
+<div class="proofEmpty"><button class="btnCapture proofInsertLink" type="button">Insérer</button> ici la capture demandée.<div class="proofPasteHint">ou collez une image enregistrée dans le presse-papiers avec Ctrl+V.</div></div>
+<img alt="Capture de l’étudiant" class="proofImg"/>
+<input accept="image/*" class="proofFile" hidden="" type="file"/>
+<div class="proofBodyActions"><button class="btnClear proofRemoveLink" type="button">retirer la capture</button></div>
+</div>
+</div>
+<div class="callout spaced-block"><strong>Indication anti-blocage :</strong> Si la destination n’existe pas, recréez-la avec <code>New-Item -Path "$LabRoot\dossiers_cible" -ItemType Directory</code>.</div>
+</div>
+</section><section class="subsection-block">
+<h4 class="subsection-title">4.7 Copier un dossier</h4>
+<div class="subsection-body">
+<p><strong>4.7</strong> — Copiez le dossier <strong>PDF</strong> vers <strong>archives</strong>. Testez d’abord sans <strong>-Recurse</strong>, puis supprimez la copie et recommencez correctement avec <strong>-Recurse</strong>.</p>
+<section class="snippet-embed">
+<section class="code-window theme-powershell">
+<div class="window-header">
+<div class="window-controls"><span></span><span></span><span></span></div>
+<div class="window-title">4.7.ps1</div>
+<button class="copy-btn" data-copy-mode="plain" data-copy-target="dossiers-4-7" type="button">Copier</button>
+</div>
+<div class="code-body">
+<div class="terminal-intro">PS C:\Users\Etudiant&gt;</div>
+<div class="code-content" id="dossiers-4-7">
+<div class="line" data-copy="Copy-Item -Path &quot;$LabRoot\dossiers_source\PDF&quot; -Destination &quot;$LabRoot\archives\PDF_copie&quot;"><span class="line-no">1</span><span class="line-text">Copy-Item -Path &quot;$LabRoot\dossiers_source\PDF&quot; -Destination &quot;$LabRoot\archives\PDF_copie&quot;</span></div>
+<div class="line" data-copy="Remove-Item -Path &quot;$LabRoot\archives\PDF_copie&quot; -Force"><span class="line-no">2</span><span class="line-text">Remove-Item -Path &quot;$LabRoot\archives\PDF_copie&quot; -Force</span></div>
+<div class="line" data-copy="Copy-Item -Path &quot;$LabRoot\dossiers_source\PDF&quot; -Destination &quot;$LabRoot\archives\PDF_copie&quot; -Recurse"><span class="line-no">3</span><span class="line-text">Copy-Item -Path &quot;$LabRoot\dossiers_source\PDF&quot; -Destination &quot;$LabRoot\archives\PDF_copie&quot; -Recurse</span></div>
+</div>
+</div>
+</section>
+</section>
+<div class="proof callout spaced-block" data-proof-id="cap08">
+<div class="proof-head">
+<div><strong>Capture obligatoire :</strong> montrez la commande correcte avec <strong>-Recurse</strong>.</div>
+</div>
+<div class="proof-body" tabindex="0" title="Cliquez ici puis collez une image depuis le presse-papiers avec Ctrl+V">
+<div class="proofEmpty"><button class="btnCapture proofInsertLink" type="button">Insérer</button> ici la capture demandée.<div class="proofPasteHint">ou collez une image enregistrée dans le presse-papiers avec Ctrl+V.</div></div>
+<img alt="Capture de l’étudiant" class="proofImg"/>
+<input accept="image/*" class="proofFile" hidden="" type="file"/>
+<div class="proofBodyActions"><button class="btnClear proofRemoveLink" type="button">retirer la capture</button></div>
+</div>
+</div>
+<div class="callout spaced-block"><strong>Attention :</strong> Pour un dossier contenant des éléments, la bonne habitude est d’utiliser <strong>-Recurse</strong>.</div>
+</div>
+</section>
+</div>
+</section>
+</div>
+</section>
+<section class="part" id="partie-4">
+<div class="part-header"><h2 class="part-title">Partie 4 — Gestion des fichiers</h2></div>
+<div class="part-body">
+<section class="section-block line-section">
+<h3 class="section-title" id="p4-s1">Manipuler les fichiers avec PowerShell</h3>
+<div class="section-body">
+<p>Cette partie traite les actions classiques sur les fichiers : création, lecture, écriture, recherche, renommage, déplacement, copie et suppression. Prenez le temps de vérifier chaque chemin avant d’exécuter une commande destructive.</p><section class="subsection-block">
+<h4 class="subsection-title">5.1 Créer un fichier</h4>
+<div class="subsection-body">
+<p><strong>5.1</strong> — Créez un fichier <strong>journal2.txt</strong> dans <strong>logs</strong>, puis vérifiez son existence.</p>
+<section class="snippet-embed">
+<section class="code-window theme-powershell">
+<div class="window-header">
+<div class="window-controls"><span></span><span></span><span></span></div>
+<div class="window-title">5.1.ps1</div>
+<button class="copy-btn" data-copy-mode="plain" data-copy-target="fichiers-5-1" type="button">Copier</button>
+</div>
+<div class="code-body">
+<div class="terminal-intro">PS C:\Users\Etudiant&gt;</div>
+<div class="code-content" id="fichiers-5-1">
+<div class="line" data-copy="New-Item -Path &quot;$LabRoot\logs&quot; -Name &quot;journal2.txt&quot; -ItemType File"><span class="line-no">1</span><span class="line-text">New-Item -Path &quot;$LabRoot\logs&quot; -Name &quot;journal2.txt&quot; -ItemType File</span></div>
+<div class="line" data-copy="Test-Path &quot;$LabRoot\logs\journal2.txt&quot;"><span class="line-no">2</span><span class="line-text">Test-Path &quot;$LabRoot\logs\journal2.txt&quot;</span></div>
+</div>
+</div>
+</section>
+</section>
+<div class="proof callout spaced-block" data-proof-id="cap09">
+<div class="proof-head">
+<div><strong>Capture obligatoire :</strong> montrez la création et la valeur <strong>True</strong> retournée par <code>Test-Path</code>.</div>
+</div>
+<div class="proof-body" tabindex="0" title="Cliquez ici puis collez une image depuis le presse-papiers avec Ctrl+V">
+<div class="proofEmpty"><button class="btnCapture proofInsertLink" type="button">Insérer</button> ici la capture demandée.<div class="proofPasteHint">ou collez une image enregistrée dans le presse-papiers avec Ctrl+V.</div></div>
+<img alt="Capture de l’étudiant" class="proofImg"/>
+<input accept="image/*" class="proofFile" hidden="" type="file"/>
+<div class="proofBodyActions"><button class="btnClear proofRemoveLink" type="button">retirer la capture</button></div>
+</div>
+</div>
+<div class="callout spaced-block"><strong>Indication anti-blocage :</strong> Si le fichier existe déjà, ajoutez <strong>-Force</strong> ou changez le nom.</div>
+</div>
+</section><section class="subsection-block">
+<h4 class="subsection-title">5.2 Lister les fichiers d’un dossier</h4>
+<div class="subsection-body">
+<p><strong>5.2</strong> — Affichez seulement les fichiers contenus dans <strong>fichiers_source</strong>.</p>
+<section class="snippet-embed">
+<section class="code-window theme-powershell">
+<div class="window-header">
+<div class="window-controls"><span></span><span></span><span></span></div>
+<div class="window-title">5.2.ps1</div>
+<button class="copy-btn" data-copy-mode="plain" data-copy-target="fichiers-5-2" type="button">Copier</button>
+</div>
+<div class="code-body">
+<div class="terminal-intro">PS C:\Users\Etudiant&gt;</div>
+<div class="code-content" id="fichiers-5-2">
+<div class="line" data-copy="Get-ChildItem -Path &quot;$LabRoot\fichiers_source&quot; -File"><span class="line-no">1</span><span class="line-text">Get-ChildItem -Path &quot;$LabRoot\fichiers_source&quot; -File</span></div>
+</div>
+</div>
+</section>
+</section>
+<div class="proof callout spaced-block" data-proof-id="cap10">
+<div class="proof-head">
+<div><strong>Capture obligatoire :</strong> montrez la liste des fichiers.</div>
+</div>
+<div class="proof-body" tabindex="0" title="Cliquez ici puis collez une image depuis le presse-papiers avec Ctrl+V">
+<div class="proofEmpty"><button class="btnCapture proofInsertLink" type="button">Insérer</button> ici la capture demandée.<div class="proofPasteHint">ou collez une image enregistrée dans le presse-papiers avec Ctrl+V.</div></div>
+<img alt="Capture de l’étudiant" class="proofImg"/>
+<input accept="image/*" class="proofFile" hidden="" type="file"/>
+<div class="proofBodyActions"><button class="btnClear proofRemoveLink" type="button">retirer la capture</button></div>
+</div>
+</div>
+</div>
+</section><section class="subsection-block">
+<h4 class="subsection-title">5.3 Lire le contenu d’un fichier texte</h4>
+<div class="subsection-body">
+<p><strong>5.3</strong> — Affichez le contenu de <strong>journal.txt</strong>.</p>
+<section class="snippet-embed">
+<section class="code-window theme-powershell">
+<div class="window-header">
+<div class="window-controls"><span></span><span></span><span></span></div>
+<div class="window-title">5.3.ps1</div>
+<button class="copy-btn" data-copy-mode="plain" data-copy-target="fichiers-5-3" type="button">Copier</button>
+</div>
+<div class="code-body">
+<div class="terminal-intro">PS C:\Users\Etudiant&gt;</div>
+<div class="code-content" id="fichiers-5-3">
+<div class="line" data-copy="Get-Content -Path &quot;$LabRoot\logs\journal.txt&quot;"><span class="line-no">1</span><span class="line-text">Get-Content -Path &quot;$LabRoot\logs\journal.txt&quot;</span></div>
+</div>
+</div>
+</section>
+</section>
+<div class="resultblock">
+<div aria-label="Affichage sur écran" class="pcframe screen-m">
+<img alt="Écran PC" src="img/pc.png"/>
+<div class="pcinner">
+<pre class="shell resultpre">Ligne 1
+Ligne 2</pre>
+</div>
+</div>
+</div>
+<div class="proof callout spaced-block" data-proof-id="cap11">
+<div class="proof-head">
+<div><strong>Capture obligatoire :</strong> montrez les deux lignes du fichier.</div>
+</div>
+<div class="proof-body" tabindex="0" title="Cliquez ici puis collez une image depuis le presse-papiers avec Ctrl+V">
+<div class="proofEmpty"><button class="btnCapture proofInsertLink" type="button">Insérer</button> ici la capture demandée.<div class="proofPasteHint">ou collez une image enregistrée dans le presse-papiers avec Ctrl+V.</div></div>
+<img alt="Capture de l’étudiant" class="proofImg"/>
+<input accept="image/*" class="proofFile" hidden="" type="file"/>
+<div class="proofBodyActions"><button class="btnClear proofRemoveLink" type="button">retirer la capture</button></div>
+</div>
+</div>
+<div class="callout spaced-block"><strong>Indication anti-blocage :</strong> Si rien ne s’affiche, revérifiez le chemin exact du fichier.</div>
+</div>
+</section><section class="subsection-block">
+<h4 class="subsection-title">5.4 Écrire dans un fichier texte</h4>
+<div class="subsection-body">
+<p><strong>5.4</strong> — Remplacez le contenu de <strong>journal.txt</strong>, ajoutez ensuite une nouvelle ligne, puis relisez le fichier.</p>
+<section class="snippet-embed">
+<section class="code-window theme-powershell">
+<div class="window-header">
+<div class="window-controls"><span></span><span></span><span></span></div>
+<div class="window-title">5.4.ps1</div>
+<button class="copy-btn" data-copy-mode="plain" data-copy-target="fichiers-5-4" type="button">Copier</button>
+</div>
+<div class="code-body">
+<div class="terminal-intro">PS C:\Users\Etudiant&gt;</div>
+<div class="code-content" id="fichiers-5-4">
+<div class="line" data-copy="Set-Content -Path &quot;$LabRoot\logs\journal.txt&quot; -Value &quot;Ligne A`r`nLigne B&quot;"><span class="line-no">1</span><span class="line-text">Set-Content -Path &quot;$LabRoot\logs\journal.txt&quot; -Value &quot;Ligne A`r`nLigne B&quot;</span></div>
+<div class="line" data-copy="Add-Content -Path &quot;$LabRoot\logs\journal.txt&quot; -Value &quot;Nouvelle entrée le $(Get-Date)&quot;"><span class="line-no">2</span><span class="line-text">Add-Content -Path &quot;$LabRoot\logs\journal.txt&quot; -Value &quot;Nouvelle entrée le $(Get-Date)&quot;</span></div>
+<div class="line" data-copy="Get-Content -Path &quot;$LabRoot\logs\journal.txt&quot;"><span class="line-no">3</span><span class="line-text">Get-Content -Path &quot;$LabRoot\logs\journal.txt&quot;</span></div>
+</div>
+</div>
+</section>
+</section>
+<div class="proof callout spaced-block" data-proof-id="cap12">
+<div class="proof-head">
+<div><strong>Capture obligatoire :</strong> montrez le contenu final du fichier.</div>
+</div>
+<div class="proof-body" tabindex="0" title="Cliquez ici puis collez une image depuis le presse-papiers avec Ctrl+V">
+<div class="proofEmpty"><button class="btnCapture proofInsertLink" type="button">Insérer</button> ici la capture demandée.<div class="proofPasteHint">ou collez une image enregistrée dans le presse-papiers avec Ctrl+V.</div></div>
+<img alt="Capture de l’étudiant" class="proofImg"/>
+<input accept="image/*" class="proofFile" hidden="" type="file"/>
+<div class="proofBodyActions"><button class="btnClear proofRemoveLink" type="button">retirer la capture</button></div>
+</div>
+</div>
+<div class="callout spaced-block"><strong>Attention :</strong> <code>Set-Content</code> remplace le contenu existant. <code>Add-Content</code> ajoute à la fin.</div>
+</div>
+</section><section class="subsection-block">
+<h4 class="subsection-title">5.5 Exporter la sortie d’une commande dans un fichier</h4>
+<div class="subsection-body">
+<p><strong>5.5</strong> — Créez le fichier <strong>processus.txt</strong> dans <strong>rapport</strong>, vérifiez son existence, puis lisez ses 10 premières lignes.</p>
+<section class="snippet-embed">
+<section class="code-window theme-powershell">
+<div class="window-header">
+<div class="window-controls"><span></span><span></span><span></span></div>
+<div class="window-title">5.5.ps1</div>
+<button class="copy-btn" data-copy-mode="plain" data-copy-target="fichiers-5-5" type="button">Copier</button>
+</div>
+<div class="code-body">
+<div class="terminal-intro">PS C:\Users\Etudiant&gt;</div>
+<div class="code-content" id="fichiers-5-5">
+<div class="line" data-copy="Get-Process | Out-File -FilePath &quot;$LabRoot\rapport\processus.txt&quot;"><span class="line-no">1</span><span class="line-text">Get-Process | Out-File -FilePath &quot;$LabRoot\rapport\processus.txt&quot;</span></div>
+<div class="line" data-copy="Test-Path &quot;$LabRoot\rapport\processus.txt&quot;"><span class="line-no">2</span><span class="line-text">Test-Path &quot;$LabRoot\rapport\processus.txt&quot;</span></div>
+<div class="line" data-copy="Get-Content -Path &quot;$LabRoot\rapport\processus.txt&quot; -TotalCount 10"><span class="line-no">3</span><span class="line-text">Get-Content -Path &quot;$LabRoot\rapport\processus.txt&quot; -TotalCount 10</span></div>
+</div>
+</div>
+</section>
+</section>
+<div class="resultblock">
+<div aria-label="Affichage sur écran" class="pcframe screen-m">
+<img alt="Écran PC" src="img/pc.png"/>
+<div class="pcinner">
+<pre class="shell resultpre">Handles  NPM(K)    PM(K)      WS(K)     CPU(s)     Id  SI ProcessName
+-------  ------    -----      -----     ------     --  -- -----------
+...
+</pre>
+</div>
+</div>
+</div>
+<div class="proof callout spaced-block" data-proof-id="cap13">
+<div class="proof-head">
+<div><strong>Capture obligatoire :</strong> montrez la création du fichier puis un aperçu de son contenu.</div>
+</div>
+<div class="proof-body" tabindex="0" title="Cliquez ici puis collez une image depuis le presse-papiers avec Ctrl+V">
+<div class="proofEmpty"><button class="btnCapture proofInsertLink" type="button">Insérer</button> ici la capture demandée.<div class="proofPasteHint">ou collez une image enregistrée dans le presse-papiers avec Ctrl+V.</div></div>
+<img alt="Capture de l’étudiant" class="proofImg"/>
+<input accept="image/*" class="proofFile" hidden="" type="file"/>
+<div class="proofBodyActions"><button class="btnClear proofRemoveLink" type="button">retirer la capture</button></div>
+</div>
+</div>
+<div class="callout spaced-block"><strong>Indication anti-blocage :</strong> Si le dossier <strong>rapport</strong> n’existe pas, recréez-le avant la commande.</div>
+</div>
+</section><section class="subsection-block">
+<h4 class="subsection-title">5.6 Rechercher un fichier par extension</h4>
+<div class="subsection-body">
+<p><strong>5.6</strong> — Recherchez tous les fichiers <strong>.log</strong> dans le laboratoire.</p>
+<section class="snippet-embed">
+<section class="code-window theme-powershell">
+<div class="window-header">
+<div class="window-controls"><span></span><span></span><span></span></div>
+<div class="window-title">5.6.ps1</div>
+<button class="copy-btn" data-copy-mode="plain" data-copy-target="fichiers-5-6" type="button">Copier</button>
+</div>
+<div class="code-body">
+<div class="terminal-intro">PS C:\Users\Etudiant&gt;</div>
+<div class="code-content" id="fichiers-5-6">
+<div class="line" data-copy="Get-ChildItem -Path $LabRoot -Filter &quot;*.log&quot; -Recurse"><span class="line-no">1</span><span class="line-text">Get-ChildItem -Path $LabRoot -Filter &quot;*.log&quot; -Recurse</span></div>
+</div>
+</div>
+</section>
+</section>
+<div class="proof callout spaced-block" data-proof-id="cap14">
+<div class="proof-head">
+<div><strong>Capture obligatoire :</strong> montrez le ou les résultats.</div>
+</div>
+<div class="proof-body" tabindex="0" title="Cliquez ici puis collez une image depuis le presse-papiers avec Ctrl+V">
+<div class="proofEmpty"><button class="btnCapture proofInsertLink" type="button">Insérer</button> ici la capture demandée.<div class="proofPasteHint">ou collez une image enregistrée dans le presse-papiers avec Ctrl+V.</div></div>
+<img alt="Capture de l’étudiant" class="proofImg"/>
+<input accept="image/*" class="proofFile" hidden="" type="file"/>
+<div class="proofBodyActions"><button class="btnClear proofRemoveLink" type="button">retirer la capture</button></div>
+</div>
+</div>
+<div class="callout spaced-block"><strong>Indication anti-blocage :</strong> Si vous n’obtenez aucun résultat, tapez d’abord <code>Get-ChildItem -Path "$LabRoot\fichiers_source" -File</code> puis vérifiez que <strong>liste.log</strong> existe bien.</div>
+</div>
+</section><section class="subsection-block">
+<h4 class="subsection-title">5.7 Rechercher un fichier par une partie du nom</h4>
+<div class="subsection-body">
+<p><strong>5.7</strong> — Recherchez les fichiers dont le nom contient <strong>rapport</strong>.</p>
+<section class="snippet-embed">
+<section class="code-window theme-powershell">
+<div class="window-header">
+<div class="window-controls"><span></span><span></span><span></span></div>
+<div class="window-title">5.7.ps1</div>
+<button class="copy-btn" data-copy-mode="plain" data-copy-target="fichiers-5-7" type="button">Copier</button>
+</div>
+<div class="code-body">
+<div class="terminal-intro">PS C:\Users\Etudiant&gt;</div>
+<div class="code-content" id="fichiers-5-7">
+<div class="line" data-copy="Get-ChildItem -Path $LabRoot -File -Recurse |"><span class="line-no">1</span><span class="line-text">Get-ChildItem -Path $LabRoot -File -Recurse |</span></div>
+<div class="line" data-copy="Where-Object { $_.Name -like &quot;*rapport*&quot; }"><span class="line-no">2</span><span class="line-text">Where-Object { $_.Name -like &quot;*rapport*&quot; }</span></div>
+</div>
+</div>
+</section>
+</section>
+<div class="proof callout spaced-block" data-proof-id="cap15">
+<div class="proof-head">
+<div><strong>Capture obligatoire :</strong> montrez la commande et le résultat.</div>
+</div>
+<div class="proof-body" tabindex="0" title="Cliquez ici puis collez une image depuis le presse-papiers avec Ctrl+V">
+<div class="proofEmpty"><button class="btnCapture proofInsertLink" type="button">Insérer</button> ici la capture demandée.<div class="proofPasteHint">ou collez une image enregistrée dans le presse-papiers avec Ctrl+V.</div></div>
+<img alt="Capture de l’étudiant" class="proofImg"/>
+<input accept="image/*" class="proofFile" hidden="" type="file"/>
+<div class="proofBodyActions"><button class="btnClear proofRemoveLink" type="button">retirer la capture</button></div>
+</div>
+</div>
+</div>
+</section><section class="subsection-block">
+<h4 class="subsection-title">5.8 Renommer un fichier</h4>
+<div class="subsection-body">
+<p><strong>5.8</strong> — Renommez <strong>ancien_nom.txt</strong> en <strong>nouveau_nom.txt</strong>.</p>
+<section class="snippet-embed">
+<section class="code-window theme-powershell">
+<div class="window-header">
+<div class="window-controls"><span></span><span></span><span></span></div>
+<div class="window-title">5.8.ps1</div>
+<button class="copy-btn" data-copy-mode="plain" data-copy-target="fichiers-5-8" type="button">Copier</button>
+</div>
+<div class="code-body">
+<div class="terminal-intro">PS C:\Users\Etudiant&gt;</div>
+<div class="code-content" id="fichiers-5-8">
+<div class="line" data-copy="Rename-Item -Path &quot;$LabRoot\fichiers_source\ancien_nom.txt&quot; -NewName &quot;nouveau_nom.txt&quot;"><span class="line-no">1</span><span class="line-text">Rename-Item -Path &quot;$LabRoot\fichiers_source\ancien_nom.txt&quot; -NewName &quot;nouveau_nom.txt&quot;</span></div>
+</div>
+</div>
+</section>
+</section>
+<div class="proof callout spaced-block" data-proof-id="cap16">
+<div class="proof-head">
+<div><strong>Capture obligatoire :</strong> montrez le nouveau nom dans la liste des fichiers.</div>
+</div>
+<div class="proof-body" tabindex="0" title="Cliquez ici puis collez une image depuis le presse-papiers avec Ctrl+V">
+<div class="proofEmpty"><button class="btnCapture proofInsertLink" type="button">Insérer</button> ici la capture demandée.<div class="proofPasteHint">ou collez une image enregistrée dans le presse-papiers avec Ctrl+V.</div></div>
+<img alt="Capture de l’étudiant" class="proofImg"/>
+<input accept="image/*" class="proofFile" hidden="" type="file"/>
+<div class="proofBodyActions"><button class="btnClear proofRemoveLink" type="button">retirer la capture</button></div>
+</div>
+</div>
+<div class="callout spaced-block"><strong>Attention :</strong> Conservez l’extension <strong>.txt</strong> pour éviter de changer le type du fichier.</div>
+</div>
+</section><section class="subsection-block">
+<h4 class="subsection-title">5.9 Déplacer un fichier</h4>
+<div class="subsection-body">
+<p><strong>5.9</strong> — Déplacez <strong>rapport_vente.txt</strong> vers <strong>fichiers_cible</strong>.</p>
+<section class="snippet-embed">
+<section class="code-window theme-powershell">
+<div class="window-header">
+<div class="window-controls"><span></span><span></span><span></span></div>
+<div class="window-title">5.9.ps1</div>
+<button class="copy-btn" data-copy-mode="plain" data-copy-target="fichiers-5-9" type="button">Copier</button>
+</div>
+<div class="code-body">
+<div class="terminal-intro">PS C:\Users\Etudiant&gt;</div>
+<div class="code-content" id="fichiers-5-9">
+<div class="line" data-copy="Move-Item -Path &quot;$LabRoot\fichiers_source\rapport_vente.txt&quot; -Destination &quot;$LabRoot\fichiers_cible\rapport_vente.txt&quot;"><span class="line-no">1</span><span class="line-text">Move-Item -Path &quot;$LabRoot\fichiers_source\rapport_vente.txt&quot; -Destination &quot;$LabRoot\fichiers_cible\rapport_vente.txt&quot;</span></div>
+</div>
+</div>
+</section>
+</section>
+<div class="proof callout spaced-block" data-proof-id="cap17">
+<div class="proof-head">
+<div><strong>Capture obligatoire :</strong> montrez que le fichier a changé d’emplacement.</div>
+</div>
+<div class="proof-body" tabindex="0" title="Cliquez ici puis collez une image depuis le presse-papiers avec Ctrl+V">
+<div class="proofEmpty"><button class="btnCapture proofInsertLink" type="button">Insérer</button> ici la capture demandée.<div class="proofPasteHint">ou collez une image enregistrée dans le presse-papiers avec Ctrl+V.</div></div>
+<img alt="Capture de l’étudiant" class="proofImg"/>
+<input accept="image/*" class="proofFile" hidden="" type="file"/>
+<div class="proofBodyActions"><button class="btnClear proofRemoveLink" type="button">retirer la capture</button></div>
+</div>
+</div>
+<div class="callout spaced-block"><strong>Indication anti-blocage :</strong> Si <strong>fichiers_cible</strong> n’existe pas, créez-le avant.</div>
+</div>
+</section><section class="subsection-block">
+<h4 class="subsection-title">5.10 Copier un fichier</h4>
+<div class="subsection-body">
+<p><strong>5.10</strong> — Copiez <strong>nouveau_nom.txt</strong> vers <strong>archives</strong>.</p>
+<section class="snippet-embed">
+<section class="code-window theme-powershell">
+<div class="window-header">
+<div class="window-controls"><span></span><span></span><span></span></div>
+<div class="window-title">5.10.ps1</div>
+<button class="copy-btn" data-copy-mode="plain" data-copy-target="fichiers-5-10" type="button">Copier</button>
+</div>
+<div class="code-body">
+<div class="terminal-intro">PS C:\Users\Etudiant&gt;</div>
+<div class="code-content" id="fichiers-5-10">
+<div class="line" data-copy="Copy-Item -Path &quot;$LabRoot\fichiers_source\nouveau_nom.txt&quot; -Destination &quot;$LabRoot\archives\nouveau_nom.txt&quot;"><span class="line-no">1</span><span class="line-text">Copy-Item -Path &quot;$LabRoot\fichiers_source\nouveau_nom.txt&quot; -Destination &quot;$LabRoot\archives\nouveau_nom.txt&quot;</span></div>
+</div>
+</div>
+</section>
+</section>
+<div class="proof callout spaced-block" data-proof-id="cap18">
+<div class="proof-head">
+<div><strong>Capture obligatoire :</strong> montrez la copie.</div>
+</div>
+<div class="proof-body" tabindex="0" title="Cliquez ici puis collez une image depuis le presse-papiers avec Ctrl+V">
+<div class="proofEmpty"><button class="btnCapture proofInsertLink" type="button">Insérer</button> ici la capture demandée.<div class="proofPasteHint">ou collez une image enregistrée dans le presse-papiers avec Ctrl+V.</div></div>
+<img alt="Capture de l’étudiant" class="proofImg"/>
+<input accept="image/*" class="proofFile" hidden="" type="file"/>
+<div class="proofBodyActions"><button class="btnClear proofRemoveLink" type="button">retirer la capture</button></div>
+</div>
+</div>
+</div>
+</section><section class="subsection-block">
+<h4 class="subsection-title">5.11 Supprimer un fichier</h4>
+<div class="subsection-body">
+<p><strong>5.11</strong> — Simulez d’abord la suppression de <strong>note_temp.txt</strong>, puis supprimez-le réellement.</p>
+<section class="snippet-embed">
+<section class="code-window theme-powershell">
+<div class="window-header">
+<div class="window-controls"><span></span><span></span><span></span></div>
+<div class="window-title">5.11.ps1</div>
+<button class="copy-btn" data-copy-mode="plain" data-copy-target="fichiers-5-11" type="button">Copier</button>
+</div>
+<div class="code-body">
+<div class="terminal-intro">PS C:\Users\Etudiant&gt;</div>
+<div class="code-content" id="fichiers-5-11">
+<div class="line" data-copy="Remove-Item &quot;$LabRoot\fichiers_source\note_temp.txt&quot; -WhatIf"><span class="line-no">1</span><span class="line-text">Remove-Item &quot;$LabRoot\fichiers_source\note_temp.txt&quot; -WhatIf</span></div>
+<div class="line" data-copy="Remove-Item &quot;$LabRoot\fichiers_source\note_temp.txt&quot;"><span class="line-no">2</span><span class="line-text">Remove-Item &quot;$LabRoot\fichiers_source\note_temp.txt&quot;</span></div>
+</div>
+</div>
+</section>
+</section>
+<div class="proof callout spaced-block" data-proof-id="cap19">
+<div class="proof-head">
+<div><strong>Capture obligatoire :</strong> montrez la simulation puis la suppression réelle.</div>
+</div>
+<div class="proof-body" tabindex="0" title="Cliquez ici puis collez une image depuis le presse-papiers avec Ctrl+V">
+<div class="proofEmpty"><button class="btnCapture proofInsertLink" type="button">Insérer</button> ici la capture demandée.<div class="proofPasteHint">ou collez une image enregistrée dans le presse-papiers avec Ctrl+V.</div></div>
+<img alt="Capture de l’étudiant" class="proofImg"/>
+<input accept="image/*" class="proofFile" hidden="" type="file"/>
+<div class="proofBodyActions"><button class="btnClear proofRemoveLink" type="button">retirer la capture</button></div>
+</div>
+</div>
+<div class="callout spaced-block"><strong>Attention :</strong> Comme pour les dossiers, utilisez <strong>-WhatIf</strong> d’abord quand vous avez un doute.</div>
+</div>
+</section>
+</div>
+</section>
+</div>
+</section>
+<section class="part" id="partie-5">
+<div class="part-header"><h2 class="part-title">Partie 5 — Gestion avancée des fichiers et dossiers</h2></div>
+<div class="part-body">
+<section class="section-block line-section">
+<h3 class="section-title" id="p5-s1">Filtrer et trier les fichiers</h3>
+<div class="section-body">
+<p>La leçon propose aussi des commandes pour filtrer et trier les fichiers. Dans ce labo, les seuils et les dates ont été adaptés pour produire un résultat réel sur une machine de classe.</p><section class="subsection-block">
+<h4 class="subsection-title">6.1 Filtrer par taille</h4>
+<div class="subsection-body">
+<p><strong>6.1</strong> — Dans notre laboratoire, il n’y a pas de fichier de 100 Mo. Pour éviter le blocage, nous allons utiliser <strong>1 Ko</strong>.</p>
+<section class="snippet-embed">
+<section class="code-window theme-powershell">
+<div class="window-header">
+<div class="window-controls"><span></span><span></span><span></span></div>
+<div class="window-title">6.1.ps1</div>
+<button class="copy-btn" data-copy-mode="plain" data-copy-target="avance-6-1" type="button">Copier</button>
+</div>
+<div class="code-body">
+<div class="terminal-intro">PS C:\Users\Etudiant&gt;</div>
+<div class="code-content" id="avance-6-1">
+<div class="line" data-copy="Get-ChildItem &quot;$LabRoot\fichiers_source&quot; -File -Recurse |"><span class="line-no">1</span><span class="line-text">Get-ChildItem &quot;$LabRoot\fichiers_source&quot; -File -Recurse |</span></div>
+<div class="line" data-copy="Where-Object { $_.Length -gt 1KB }"><span class="line-no">2</span><span class="line-text">Where-Object { $_.Length -gt 1KB }</span></div>
+</div>
+</div>
+</section>
+</section>
+<div class="resultblock">
+<div aria-label="Affichage sur écran" class="pcframe screen-m">
+<img alt="Écran PC" src="img/pc.png"/>
+<div class="pcinner">
+<pre class="shell resultpre">Mode   LastWriteTime   Length Name
+----   -------------   ------ ----
+-a---  ...              5000 gros_fichier.txt</pre>
+</div>
+</div>
+</div>
+<div class="proof callout spaced-block" data-proof-id="cap20">
+<div class="proof-head">
+<div><strong>Capture obligatoire :</strong> montrez le ou les fichiers trouvés.</div>
+</div>
+<div class="proof-body" tabindex="0" title="Cliquez ici puis collez une image depuis le presse-papiers avec Ctrl+V">
+<div class="proofEmpty"><button class="btnCapture proofInsertLink" type="button">Insérer</button> ici la capture demandée.<div class="proofPasteHint">ou collez une image enregistrée dans le presse-papiers avec Ctrl+V.</div></div>
+<img alt="Capture de l’étudiant" class="proofImg"/>
+<input accept="image/*" class="proofFile" hidden="" type="file"/>
+<div class="proofBodyActions"><button class="btnClear proofRemoveLink" type="button">retirer la capture</button></div>
+</div>
+</div>
+<div class="callout spaced-block"><strong>Indication anti-blocage :</strong> Si aucun fichier n’apparaît, remplacez <strong>1KB</strong> par <strong>100B</strong>.</div>
+</div>
+</section><section class="subsection-block">
+<h4 class="subsection-title">6.2 Filtrer par date</h4>
+<div class="subsection-body">
+<p><strong>6.2</strong> — Affichez les fichiers modifiés aujourd’hui ou récemment.</p>
+<section class="snippet-embed">
+<section class="code-window theme-powershell">
+<div class="window-header">
+<div class="window-controls"><span></span><span></span><span></span></div>
+<div class="window-title">6.2.ps1</div>
+<button class="copy-btn" data-copy-mode="plain" data-copy-target="avance-6-2" type="button">Copier</button>
+</div>
+<div class="code-body">
+<div class="terminal-intro">PS C:\Users\Etudiant&gt;</div>
+<div class="code-content" id="avance-6-2">
+<div class="line" data-copy="$limite = (Get-Date).AddDays(-1)"><span class="line-no">1</span><span class="line-text">$limite = (Get-Date).AddDays(-1)</span></div>
+<div class="line" data-copy="Get-ChildItem $LabRoot -File -Recurse |"><span class="line-no">2</span><span class="line-text">Get-ChildItem $LabRoot -File -Recurse |</span></div>
+<div class="line" data-copy="Where-Object { $_.LastWriteTime -gt $limite }"><span class="line-no">3</span><span class="line-text">Where-Object { $_.LastWriteTime -gt $limite }</span></div>
+</div>
+</div>
+</section>
+</section>
+<div class="proof callout spaced-block" data-proof-id="cap21">
+<div class="proof-head">
+<div><strong>Capture obligatoire :</strong> montrez le résultat et la variable <strong>$limite</strong>.</div>
+</div>
+<div class="proof-body" tabindex="0" title="Cliquez ici puis collez une image depuis le presse-papiers avec Ctrl+V">
+<div class="proofEmpty"><button class="btnCapture proofInsertLink" type="button">Insérer</button> ici la capture demandée.<div class="proofPasteHint">ou collez une image enregistrée dans le presse-papiers avec Ctrl+V.</div></div>
+<img alt="Capture de l’étudiant" class="proofImg"/>
+<input accept="image/*" class="proofFile" hidden="" type="file"/>
+<div class="proofBodyActions"><button class="btnClear proofRemoveLink" type="button">retirer la capture</button></div>
+</div>
+</div>
+<div class="callout spaced-block"><strong>Attention :</strong> La leçon parle de fichiers de plus de 30 jours, mais sur une machine de labo cela peut retourner zéro résultat. Ici, on garde le même principe avec une limite réaliste.</div>
+</div>
+</section><section class="subsection-block">
+<h4 class="subsection-title">6.3 Filtrer par extension ou par nom</h4>
+<div class="subsection-body">
+<p><strong>6.3</strong> — Affichez les fichiers <strong>.txt</strong>, puis affichez les fichiers dont le nom contient <strong>journal</strong>.</p>
+<section class="snippet-embed">
+<section class="code-window theme-powershell">
+<div class="window-header">
+<div class="window-controls"><span></span><span></span><span></span></div>
+<div class="window-title">6.3.ps1</div>
+<button class="copy-btn" data-copy-mode="plain" data-copy-target="avance-6-3" type="button">Copier</button>
+</div>
+<div class="code-body">
+<div class="terminal-intro">PS C:\Users\Etudiant&gt;</div>
+<div class="code-content" id="avance-6-3">
+<div class="line" data-copy="Get-ChildItem $LabRoot -File -Recurse |"><span class="line-no">1</span><span class="line-text">Get-ChildItem $LabRoot -File -Recurse |</span></div>
+<div class="line" data-copy="Where-Object { $_.Extension -eq &quot;.txt&quot; }"><span class="line-no">2</span><span class="line-text">Where-Object { $_.Extension -eq &quot;.txt&quot; }</span></div>
+<div class="line" data-copy=""><span class="line-no">3</span><span class="line-text"> </span></div>
+<div class="line" data-copy="Get-ChildItem $LabRoot -File -Recurse |"><span class="line-no">4</span><span class="line-text">Get-ChildItem $LabRoot -File -Recurse |</span></div>
+<div class="line" data-copy="Where-Object { $_.Name -like &quot;*journal*&quot; }"><span class="line-no">5</span><span class="line-text">Where-Object { $_.Name -like &quot;*journal*&quot; }</span></div>
+</div>
+</div>
+</section>
+</section>
+<div class="proof callout spaced-block" data-proof-id="cap22">
+<div class="proof-head">
+<div><strong>Capture obligatoire :</strong> montrez les deux résultats.</div>
+</div>
+<div class="proof-body" tabindex="0" title="Cliquez ici puis collez une image depuis le presse-papiers avec Ctrl+V">
+<div class="proofEmpty"><button class="btnCapture proofInsertLink" type="button">Insérer</button> ici la capture demandée.<div class="proofPasteHint">ou collez une image enregistrée dans le presse-papiers avec Ctrl+V.</div></div>
+<img alt="Capture de l’étudiant" class="proofImg"/>
+<input accept="image/*" class="proofFile" hidden="" type="file"/>
+<div class="proofBodyActions"><button class="btnClear proofRemoveLink" type="button">retirer la capture</button></div>
+</div>
+</div>
+</div>
+</section><section class="subsection-block">
+<h4 class="subsection-title">6.4 Trier par nom, taille ou date</h4>
+<div class="subsection-body">
+<p><strong>6.4</strong> — Triez les fichiers de <strong>fichiers_source</strong> par taille décroissante, puis triez-les par nom.</p>
+<section class="snippet-embed">
+<section class="code-window theme-powershell">
+<div class="window-header">
+<div class="window-controls"><span></span><span></span><span></span></div>
+<div class="window-title">6.4.ps1</div>
+<button class="copy-btn" data-copy-mode="plain" data-copy-target="avance-6-4" type="button">Copier</button>
+</div>
+<div class="code-body">
+<div class="terminal-intro">PS C:\Users\Etudiant&gt;</div>
+<div class="code-content" id="avance-6-4">
+<div class="line" data-copy="Get-ChildItem &quot;$LabRoot\fichiers_source&quot; -File |"><span class="line-no">1</span><span class="line-text">Get-ChildItem &quot;$LabRoot\fichiers_source&quot; -File |</span></div>
+<div class="line" data-copy="Sort-Object Length -Descending"><span class="line-no">2</span><span class="line-text">Sort-Object Length -Descending</span></div>
+<div class="line" data-copy=""><span class="line-no">3</span><span class="line-text"> </span></div>
+<div class="line" data-copy="Get-ChildItem &quot;$LabRoot\fichiers_source&quot; -File |"><span class="line-no">4</span><span class="line-text">Get-ChildItem &quot;$LabRoot\fichiers_source&quot; -File |</span></div>
+<div class="line" data-copy="Sort-Object Name"><span class="line-no">5</span><span class="line-text">Sort-Object Name</span></div>
+</div>
+</div>
+</section>
+</section>
+<div class="proof callout spaced-block" data-proof-id="cap23">
+<div class="proof-head">
+<div><strong>Capture obligatoire :</strong> montrez au moins un tri correct.</div>
+</div>
+<div class="proof-body" tabindex="0" title="Cliquez ici puis collez une image depuis le presse-papiers avec Ctrl+V">
+<div class="proofEmpty"><button class="btnCapture proofInsertLink" type="button">Insérer</button> ici la capture demandée.<div class="proofPasteHint">ou collez une image enregistrée dans le presse-papiers avec Ctrl+V.</div></div>
+<img alt="Capture de l’étudiant" class="proofImg"/>
+<input accept="image/*" class="proofFile" hidden="" type="file"/>
+<div class="proofBodyActions"><button class="btnClear proofRemoveLink" type="button">retirer la capture</button></div>
+</div>
+</div>
+<div class="callout spaced-block"><strong>Indication anti-blocage :</strong> Si vous ne voyez pas bien la différence, utilisez d’abord <code>Get-ChildItem "$LabRoot\fichiers_source" -File | Format-Table Name, Length, LastWriteTime</code>.</div>
+</div>
+</section>
+</div>
+</section>
+</div>
+</section>
+<section class="part" id="partie-6">
+<div class="part-header"><h2 class="part-title">Partie 6 — Rechercher les fichiers en double</h2></div>
+<div class="part-body">
+<section class="section-block line-section">
+<h3 class="section-title" id="p6-s1">Rechercher les fichiers en double</h3>
+<div class="section-body">
+<p>Cette partie montre comment comparer le contenu réel des fichiers grâce au hash. Le but est de repérer des doublons et de comprendre la logique d’une suppression prudente avec <strong>-WhatIf</strong>.</p><section class="subsection-block">
+<h4 class="subsection-title">7.1 Afficher le hash des fichiers</h4>
+<div class="subsection-body">
+<p><strong>7.1</strong> — Affichez le hash des fichiers présents dans le dossier <strong>photos</strong>.</p>
+<section class="snippet-embed">
+<section class="code-window theme-powershell">
+<div class="window-header">
+<div class="window-controls"><span></span><span></span><span></span></div>
+<div class="window-title">7.1.ps1</div>
+<button class="copy-btn" data-copy-mode="plain" data-copy-target="doublons-7-1" type="button">Copier</button>
+</div>
+<div class="code-body">
+<div class="terminal-intro">PS C:\Users\Etudiant&gt;</div>
+<div class="code-content" id="doublons-7-1">
+<div class="line" data-copy="Get-ChildItem &quot;$LabRoot\photos&quot; -File -Recurse | Get-FileHash"><span class="line-no">1</span><span class="line-text">Get-ChildItem &quot;$LabRoot\photos&quot; -File -Recurse | Get-FileHash</span></div>
+</div>
+</div>
+</section>
+</section>
+<div class="proof callout spaced-block" data-proof-id="cap24">
+<div class="proof-head">
+<div><strong>Capture obligatoire :</strong> montrez les hash calculés.</div>
+</div>
+<div class="proof-body" tabindex="0" title="Cliquez ici puis collez une image depuis le presse-papiers avec Ctrl+V">
+<div class="proofEmpty"><button class="btnCapture proofInsertLink" type="button">Insérer</button> ici la capture demandée.<div class="proofPasteHint">ou collez une image enregistrée dans le presse-papiers avec Ctrl+V.</div></div>
+<img alt="Capture de l’étudiant" class="proofImg"/>
+<input accept="image/*" class="proofFile" hidden="" type="file"/>
+<div class="proofBodyActions"><button class="btnClear proofRemoveLink" type="button">retirer la capture</button></div>
+</div>
+</div>
+</div>
+</section><section class="subsection-block">
+<h4 class="subsection-title">7.2 Repérer les doublons</h4>
+<div class="subsection-body">
+<p><strong>7.2</strong> — Détectez les fichiers qui partagent le même hash.</p>
+<section class="snippet-embed">
+<section class="code-window theme-powershell">
+<div class="window-header">
+<div class="window-controls"><span></span><span></span><span></span></div>
+<div class="window-title">7.2.ps1</div>
+<button class="copy-btn" data-copy-mode="plain" data-copy-target="doublons-7-2" type="button">Copier</button>
+</div>
+<div class="code-body">
+<div class="terminal-intro">PS C:\Users\Etudiant&gt;</div>
+<div class="code-content" id="doublons-7-2">
+<div class="line" data-copy="Get-ChildItem &quot;$LabRoot\photos&quot; -File -Recurse | Get-FileHash |"><span class="line-no">1</span><span class="line-text">Get-ChildItem &quot;$LabRoot\photos&quot; -File -Recurse | Get-FileHash |</span></div>
+<div class="line" data-copy="Group-Object -Property Hash | Where-Object { $_.Count -gt 1 }"><span class="line-no">2</span><span class="line-text">Group-Object -Property Hash | Where-Object { $_.Count -gt 1 }</span></div>
+</div>
+</div>
+</section>
+</section>
+<div class="resultblock">
+<div aria-label="Affichage sur écran" class="pcframe screen-m">
+<img alt="Écran PC" src="img/pc.png"/>
+<div class="pcinner">
+<pre class="shell resultpre">Count Name                      Group
+----- ----                      -----
+    2 6E...A1                   {photo1.txt, photo1_copie.txt}</pre>
+</div>
+</div>
+</div>
+<div class="proof callout spaced-block" data-proof-id="cap25">
+<div class="proof-head">
+<div><strong>Capture obligatoire :</strong> montrez qu’un groupe de doublons est détecté.</div>
+</div>
+<div class="proof-body" tabindex="0" title="Cliquez ici puis collez une image depuis le presse-papiers avec Ctrl+V">
+<div class="proofEmpty"><button class="btnCapture proofInsertLink" type="button">Insérer</button> ici la capture demandée.<div class="proofPasteHint">ou collez une image enregistrée dans le presse-papiers avec Ctrl+V.</div></div>
+<img alt="Capture de l’étudiant" class="proofImg"/>
+<input accept="image/*" class="proofFile" hidden="" type="file"/>
+<div class="proofBodyActions"><button class="btnClear proofRemoveLink" type="button">retirer la capture</button></div>
+</div>
+</div>
+<div class="callout spaced-block"><strong>Indication anti-blocage :</strong> Si aucun doublon n’apparaît, relancez la préparation obligatoire du début.</div>
+</div>
+</section><section class="subsection-block">
+<h4 class="subsection-title">7.3 Simuler la suppression des doublons</h4>
+<div class="subsection-body">
+<p><strong>7.3</strong> — Dans ce TP, vous devez simuler la suppression sans réellement effacer.</p>
+<section class="snippet-embed">
+<section class="code-window theme-powershell">
+<div class="window-header">
+<div class="window-controls"><span></span><span></span><span></span></div>
+<div class="window-title">7.3.ps1</div>
+<button class="copy-btn" data-copy-mode="plain" data-copy-target="doublons-7-3" type="button">Copier</button>
+</div>
+<div class="code-body">
+<div class="terminal-intro">PS C:\Users\Etudiant&gt;</div>
+<div class="code-content" id="doublons-7-3">
+<div class="line" data-copy="Get-ChildItem &quot;$LabRoot\photos&quot; -File -Recurse | Get-FileHash |"><span class="line-no">1</span><span class="line-text">Get-ChildItem &quot;$LabRoot\photos&quot; -File -Recurse | Get-FileHash |</span></div>
+<div class="line" data-copy="Group-Object Hash | Where-Object { $_.Count -gt 1 } |"><span class="line-no">2</span><span class="line-text">Group-Object Hash | Where-Object { $_.Count -gt 1 } |</span></div>
+<div class="line" data-copy="ForEach-Object {"><span class="line-no">3</span><span class="line-text">ForEach-Object {</span></div>
+<div class="line" data-copy="    $_.Group | Select-Object -Skip 1 | Remove-Item -WhatIf"><span class="line-no">4</span><span class="line-text">    $_.Group | Select-Object -Skip 1 | Remove-Item -WhatIf</span></div>
+<div class="line" data-copy="}"><span class="line-no">5</span><span class="line-text">}</span></div>
+</div>
+</div>
+</section>
+</section>
+<div class="proof callout spaced-block" data-proof-id="cap26">
+<div class="proof-head">
+<div><strong>Capture obligatoire :</strong> montrez la simulation avec <strong>-WhatIf</strong>.</div>
+</div>
+<div class="proof-body" tabindex="0" title="Cliquez ici puis collez une image depuis le presse-papiers avec Ctrl+V">
+<div class="proofEmpty"><button class="btnCapture proofInsertLink" type="button">Insérer</button> ici la capture demandée.<div class="proofPasteHint">ou collez une image enregistrée dans le presse-papiers avec Ctrl+V.</div></div>
+<img alt="Capture de l’étudiant" class="proofImg"/>
+<input accept="image/*" class="proofFile" hidden="" type="file"/>
+<div class="proofBodyActions"><button class="btnClear proofRemoveLink" type="button">retirer la capture</button></div>
+</div>
+</div>
+<div class="callout spaced-block"><strong>Attention :</strong> Ne retirez pas <strong>-WhatIf</strong> dans ce TP. Le but ici est de comprendre la logique sans prendre de risque.</div>
+</div>
+</section>
+</div>
+</section>
+</div>
+</section>
+<section class="part" id="partie-7">
+<div class="part-header"><h2 class="part-title">Partie 7 — Automatiser le rangement des fichiers par type</h2></div>
+<div class="part-body">
+<section class="section-block line-section">
+<h3 class="section-title" id="p7-s1">Lancer le script d’organisation</h3>
+<div class="section-body">
+<p><strong>8.1</strong> — Le script suivant est adapté à votre laboratoire. Il range automatiquement les fichiers selon leur extension dans <strong>downloads_test</strong>.</p>
+<section class="snippet-embed">
+<section class="code-window theme-powershell">
+<div class="window-header">
+<div class="window-controls"><span></span><span></span><span></span></div>
+<div class="window-title">organisation_par_type.ps1</div>
+<button class="copy-btn" data-copy-mode="plain" data-copy-target="ps-organisation" type="button">Copier</button>
+</div>
+<div class="code-body">
+<div class="terminal-intro">PS C:\Users\Etudiant&gt;</div>
+<div class="code-content" id="ps-organisation">
+<div class="line" data-copy="$TargetFolder = &quot;$LabRoot\downloads_test&quot;"><span class="line-no">1</span><span class="line-text">$TargetFolder = &quot;$LabRoot\downloads_test&quot;</span></div>
+<div class="line" data-copy="Set-Location -Path $TargetFolder"><span class="line-no">2</span><span class="line-text">Set-Location -Path $TargetFolder</span></div>
+<div class="line" data-copy="$files = Get-ChildItem -File"><span class="line-no">3</span><span class="line-text">$files = Get-ChildItem -File</span></div>
+<div class="line" data-copy=""><span class="line-no">4</span><span class="line-text"> </span></div>
+<div class="line" data-copy="foreach ($file in $files) {"><span class="line-no">5</span><span class="line-text">foreach ($file in $files) {</span></div>
+<div class="line" data-copy="    $ext = $file.Extension.TrimStart(&#x27;.&#x27;).ToLower()"><span class="line-no">6</span><span class="line-text">    $ext = $file.Extension.TrimStart(&#x27;.&#x27;).ToLower()</span></div>
+<div class="line" data-copy=""><span class="line-no">7</span><span class="line-text"> </span></div>
+<div class="line" data-copy="    if ($ext -eq &quot;&quot;) {"><span class="line-no">8</span><span class="line-text">    if ($ext -eq &quot;&quot;) {</span></div>
+<div class="line" data-copy="        continue"><span class="line-no">9</span><span class="line-text">        continue</span></div>
+<div class="line" data-copy="    }"><span class="line-no">10</span><span class="line-text">    }</span></div>
+<div class="line" data-copy=""><span class="line-no">11</span><span class="line-text"> </span></div>
+<div class="line" data-copy="    $destFolder = Join-Path $TargetFolder $ext"><span class="line-no">12</span><span class="line-text">    $destFolder = Join-Path $TargetFolder $ext</span></div>
+<div class="line" data-copy=""><span class="line-no">13</span><span class="line-text"> </span></div>
+<div class="line" data-copy="    if (!(Test-Path $destFolder)) {"><span class="line-no">14</span><span class="line-text">    if (!(Test-Path $destFolder)) {</span></div>
+<div class="line" data-copy="        New-Item -Path $destFolder -ItemType Directory | Out-Null"><span class="line-no">15</span><span class="line-text">        New-Item -Path $destFolder -ItemType Directory | Out-Null</span></div>
+<div class="line" data-copy="    }"><span class="line-no">16</span><span class="line-text">    }</span></div>
+<div class="line" data-copy=""><span class="line-no">17</span><span class="line-text"> </span></div>
+<div class="line" data-copy="    Move-Item -Path $file.FullName -Destination $destFolder"><span class="line-no">18</span><span class="line-text">    Move-Item -Path $file.FullName -Destination $destFolder</span></div>
+<div class="line" data-copy="}"><span class="line-no">19</span><span class="line-text">}</span></div>
+</div>
+</div>
+</section>
+</section>
+<div class="resultblock">
+<div aria-label="Affichage sur écran" class="pcframe screen-m">
+<img alt="Écran PC" src="img/pc.png"/>
+<div class="pcinner">
+<pre class="shell resultpre">downloads_test
+├── docx
+├── jpg
+├── pdf
+├── png
+└── txt</pre>
+</div>
+</div>
+</div>
+<div class="proof callout spaced-block" data-proof-id="cap27">
+<div class="proof-head">
+<div><strong>Capture obligatoire :</strong> montrez le dossier <strong>downloads_test</strong> après le rangement.</div>
+</div>
+<div class="proof-body" tabindex="0" title="Cliquez ici puis collez une image depuis le presse-papiers avec Ctrl+V">
+<div class="proofEmpty"><button class="btnCapture proofInsertLink" type="button">Insérer</button> ici la capture demandée.<div class="proofPasteHint">ou collez une image enregistrée dans le presse-papiers avec Ctrl+V.</div></div>
+<img alt="Capture de l’étudiant" class="proofImg"/>
+<input accept="image/*" class="proofFile" hidden="" type="file"/>
+<div class="proofBodyActions"><button class="btnClear proofRemoveLink" type="button">retirer la capture</button></div>
+</div>
+</div>
+<div class="proof callout spaced-block" data-proof-id="cap28">
+<div class="proof-head">
+<div><strong>Capture obligatoire :</strong> montrez au moins deux sous-dossiers créés automatiquement, par exemple <strong>jpg</strong> et <strong>pdf</strong>.</div>
+</div>
+<div class="proof-body" tabindex="0" title="Cliquez ici puis collez une image depuis le presse-papiers avec Ctrl+V">
+<div class="proofEmpty"><button class="btnCapture proofInsertLink" type="button">Insérer</button> ici la capture demandée.<div class="proofPasteHint">ou collez une image enregistrée dans le presse-papiers avec Ctrl+V.</div></div>
+<img alt="Capture de l’étudiant" class="proofImg"/>
+<input accept="image/*" class="proofFile" hidden="" type="file"/>
+<div class="proofBodyActions"><button class="btnClear proofRemoveLink" type="button">retirer la capture</button></div>
+</div>
+</div>
+<div class="callout spaced-block"><strong>Attention :</strong> Ce script déplace les fichiers. Il ne faut pas l’exécuter dans votre vrai dossier <strong>Téléchargements</strong>. Dans ce TP, vous devez l’exécuter seulement dans <strong>downloads_test</strong>.</div>
+<div class="callout spaced-block"><strong>Indication anti-blocage :</strong> Si vous relancez le script une deuxième fois et que le dossier semble déjà rangé, ce n’est pas une erreur : il n’y a simplement plus de fichiers à déplacer à la racine.</div>
+</div>
+</section>
+</div>
+</section>
+<section class="part" id="partie-8">
+<div class="part-header"><h2 class="part-title">Partie 8 — Permissions des fichiers et dossiers</h2></div>
+<div class="part-body">
+<section class="section-block line-section">
+<h3 class="section-title" id="p8-s1">Consulter et appliquer des permissions</h3>
+<div class="section-body">
+<p>Les ACL permettent de lire les permissions et, dans certains cas, de les recopier d’un fichier vers un autre. Comme toujours, cette manipulation doit se faire uniquement sur les fichiers du laboratoire.</p><section class="subsection-block">
+<h4 class="subsection-title">9.1 Voir les ACL d’un dossier</h4>
+<div class="subsection-body">
+<p><strong>9.1</strong> — Consultez les ACL du dossier de labo, puis affichez seulement quelques informations utiles.</p>
+<section class="snippet-embed">
+<section class="code-window theme-powershell">
+<div class="window-header">
+<div class="window-controls"><span></span><span></span><span></span></div>
+<div class="window-title">9.1.ps1</div>
+<button class="copy-btn" data-copy-mode="plain" data-copy-target="acl-9-1" type="button">Copier</button>
+</div>
+<div class="code-body">
+<div class="terminal-intro">PS C:\Users\Etudiant&gt;</div>
+<div class="code-content" id="acl-9-1">
+<div class="line" data-copy="Get-Acl -Path &quot;$LabRoot&quot; | Format-List"><span class="line-no">1</span><span class="line-text">Get-Acl -Path &quot;$LabRoot&quot; | Format-List</span></div>
+<div class="line" data-copy=""><span class="line-no">2</span><span class="line-text"> </span></div>
+<div class="line" data-copy="$acl = Get-Acl &quot;$LabRoot&quot;"><span class="line-no">3</span><span class="line-text">$acl = Get-Acl &quot;$LabRoot&quot;</span></div>
+<div class="line" data-copy="$acl.Access | ForEach-Object {"><span class="line-no">4</span><span class="line-text">$acl.Access | ForEach-Object {</span></div>
+<div class="line" data-copy="    $_ | Format-List IdentityReference, FileSystemRights, AccessControlType"><span class="line-no">5</span><span class="line-text">    $_ | Format-List IdentityReference, FileSystemRights, AccessControlType</span></div>
+<div class="line" data-copy="}"><span class="line-no">6</span><span class="line-text">}</span></div>
+</div>
+</div>
+</section>
+</section>
+<div class="proof callout spaced-block" data-proof-id="cap29">
+<div class="proof-head">
+<div><strong>Capture obligatoire :</strong> montrez au moins une ou deux règles d’accès.</div>
+</div>
+<div class="proof-body" tabindex="0" title="Cliquez ici puis collez une image depuis le presse-papiers avec Ctrl+V">
+<div class="proofEmpty"><button class="btnCapture proofInsertLink" type="button">Insérer</button> ici la capture demandée.<div class="proofPasteHint">ou collez une image enregistrée dans le presse-papiers avec Ctrl+V.</div></div>
+<img alt="Capture de l’étudiant" class="proofImg"/>
+<input accept="image/*" class="proofFile" hidden="" type="file"/>
+<div class="proofBodyActions"><button class="btnClear proofRemoveLink" type="button">retirer la capture</button></div>
+</div>
+</div>
+<div class="callout spaced-block"><strong>Indication anti-blocage :</strong> Si l’affichage est long, ce n’est pas un problème. Faites simplement défiler un peu et capturez une partie lisible.</div>
+</div>
+</section><section class="subsection-block">
+<h4 class="subsection-title">9.2 Copier les permissions d’un fichier vers un autre</h4>
+<div class="subsection-body">
+<p><strong>9.2</strong> — Copiez les permissions du fichier source vers le fichier cible, puis vérifiez les ACL du fichier cible.</p>
+<section class="snippet-embed">
+<section class="code-window theme-powershell">
+<div class="window-header">
+<div class="window-controls"><span></span><span></span><span></span></div>
+<div class="window-title">9.2.ps1</div>
+<button class="copy-btn" data-copy-mode="plain" data-copy-target="acl-9-2" type="button">Copier</button>
+</div>
+<div class="code-body">
+<div class="terminal-intro">PS C:\Users\Etudiant&gt;</div>
+<div class="code-content" id="acl-9-2">
+<div class="line" data-copy="$aclSource = Get-Acl -Path &quot;$LabRoot\fichiers_source\source_acl.txt&quot;"><span class="line-no">1</span><span class="line-text">$aclSource = Get-Acl -Path &quot;$LabRoot\fichiers_source\source_acl.txt&quot;</span></div>
+<div class="line" data-copy="Set-Acl -Path &quot;$LabRoot\fichiers_source\cible_acl.txt&quot; -AclObject $aclSource"><span class="line-no">2</span><span class="line-text">Set-Acl -Path &quot;$LabRoot\fichiers_source\cible_acl.txt&quot; -AclObject $aclSource</span></div>
+<div class="line" data-copy="Get-Acl -Path &quot;$LabRoot\fichiers_source\cible_acl.txt&quot; | Format-List"><span class="line-no">3</span><span class="line-text">Get-Acl -Path &quot;$LabRoot\fichiers_source\cible_acl.txt&quot; | Format-List</span></div>
+</div>
+</div>
+</section>
+</section>
+<div class="proof callout spaced-block" data-proof-id="cap30">
+<div class="proof-head">
+<div><strong>Capture obligatoire :</strong> montrez la commande de copie d’ACL puis la vérification.</div>
+</div>
+<div class="proof-body" tabindex="0" title="Cliquez ici puis collez une image depuis le presse-papiers avec Ctrl+V">
+<div class="proofEmpty"><button class="btnCapture proofInsertLink" type="button">Insérer</button> ici la capture demandée.<div class="proofPasteHint">ou collez une image enregistrée dans le presse-papiers avec Ctrl+V.</div></div>
+<img alt="Capture de l’étudiant" class="proofImg"/>
+<input accept="image/*" class="proofFile" hidden="" type="file"/>
+<div class="proofBodyActions"><button class="btnClear proofRemoveLink" type="button">retirer la capture</button></div>
+</div>
+</div>
+<div class="callout spaced-block"><strong>Attention :</strong> Cette tâche doit être réalisée sur les fichiers du laboratoire uniquement.</div>
+<div class="callout spaced-block"><strong>Indication anti-blocage :</strong> Si vous obtenez une erreur d’accès, fermez PowerShell, rouvrez-le normalement, replacez-vous dans le labo avec <code>Set-Location -Path $LabRoot</code>, puis réessayez. Si l’erreur persiste, passez à la tâche suivante et signalez le message obtenu.</div>
+</div>
+</section>
+</div>
+</section>
+</div>
+</section>
+<section class="part" id="partie-9">
+<div class="part-header"><h2 class="part-title">Partie 9 — Bilan final</h2></div>
+<div class="part-body">
+<section class="section-block line-section">
+<h3 class="section-title" id="p9-s1">Vérification de fin de labo</h3>
+<div class="section-body">
+<p>Avant de remettre votre travail, vérifiez que toutes les commandes ont été testées dans le dossier du laboratoire, que les captures sont lisibles, que les chemins affichés correspondent bien à votre environnement, que vous avez utilisé <strong>-WhatIf</strong> pour les tâches sensibles et que vous n’avez pas travaillé dans un vrai dossier personnel important.</p>
+<div class="table-wrap">
+<table class="capture-checklist-table">
+<thead>
+<tr>
+<th>Capture obligatoire</th>
+<th>Ce que la capture doit montrer</th>
+<th>Insérée</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Capture 1</td>
+<td>La préparation obligatoire terminée, le chemin du labo et la liste des dossiers créés.</td>
+<td class="check-cell"><input aria-label="Capture 1" class="capture-check" data-proof-target="cap01" type="checkbox"/></td>
+</tr><tr>
+<td>Capture 2</td>
+<td>Montrez la commande de création et la liste contenant logfiles.</td>
+<td class="check-cell"><input aria-label="Capture 2" class="capture-check" data-proof-target="cap02" type="checkbox"/></td>
+</tr><tr>
+<td>Capture 3</td>
+<td>Montrez la différence entre la liste avec -directory et la liste complète.</td>
+<td class="check-cell"><input aria-label="Capture 3" class="capture-check" data-proof-target="cap03" type="checkbox"/></td>
+</tr><tr>
+<td>Capture 4</td>
+<td>Montrez le nouveau nom photosvacances.</td>
+<td class="check-cell"><input aria-label="Capture 4" class="capture-check" data-proof-target="cap04" type="checkbox"/></td>
+</tr><tr>
+<td>Capture 5</td>
+<td>Montrez la création puis la suppression du dossier vide.</td>
+<td class="check-cell"><input aria-label="Capture 5" class="capture-check" data-proof-target="cap05" type="checkbox"/></td>
+</tr><tr>
+<td>Capture 6</td>
+<td>Montrez d’abord la simulation avec -whatif, puis le résultat final.</td>
+<td class="check-cell"><input aria-label="Capture 6" class="capture-check" data-proof-target="cap06" type="checkbox"/></td>
+</tr><tr>
+<td>Capture 7</td>
+<td>Montrez que le dossier n’est plus dans dossiers_source et qu’il est maintenant dans dossiers_cible.</td>
+<td class="check-cell"><input aria-label="Capture 7" class="capture-check" data-proof-target="cap07" type="checkbox"/></td>
+</tr><tr>
+<td>Capture 8</td>
+<td>Montrez la commande correcte avec -recurse.</td>
+<td class="check-cell"><input aria-label="Capture 8" class="capture-check" data-proof-target="cap08" type="checkbox"/></td>
+</tr><tr>
+<td>Capture 9</td>
+<td>Montrez la création et la valeur true retournée par test-path.</td>
+<td class="check-cell"><input aria-label="Capture 9" class="capture-check" data-proof-target="cap09" type="checkbox"/></td>
+</tr><tr>
+<td>Capture 10</td>
+<td>Montrez la liste des fichiers.</td>
+<td class="check-cell"><input aria-label="Capture 10" class="capture-check" data-proof-target="cap10" type="checkbox"/></td>
+</tr><tr>
+<td>Capture 11</td>
+<td>Montrez les deux lignes du fichier.</td>
+<td class="check-cell"><input aria-label="Capture 11" class="capture-check" data-proof-target="cap11" type="checkbox"/></td>
+</tr><tr>
+<td>Capture 12</td>
+<td>Montrez le contenu final du fichier.</td>
+<td class="check-cell"><input aria-label="Capture 12" class="capture-check" data-proof-target="cap12" type="checkbox"/></td>
+</tr><tr>
+<td>Capture 13</td>
+<td>Montrez la création du fichier puis un aperçu de son contenu.</td>
+<td class="check-cell"><input aria-label="Capture 13" class="capture-check" data-proof-target="cap13" type="checkbox"/></td>
+</tr><tr>
+<td>Capture 14</td>
+<td>Montrez le ou les résultats.</td>
+<td class="check-cell"><input aria-label="Capture 14" class="capture-check" data-proof-target="cap14" type="checkbox"/></td>
+</tr><tr>
+<td>Capture 15</td>
+<td>Montrez la commande et le résultat.</td>
+<td class="check-cell"><input aria-label="Capture 15" class="capture-check" data-proof-target="cap15" type="checkbox"/></td>
+</tr><tr>
+<td>Capture 16</td>
+<td>Montrez le nouveau nom dans la liste des fichiers.</td>
+<td class="check-cell"><input aria-label="Capture 16" class="capture-check" data-proof-target="cap16" type="checkbox"/></td>
+</tr><tr>
+<td>Capture 17</td>
+<td>Montrez que le fichier a changé d’emplacement.</td>
+<td class="check-cell"><input aria-label="Capture 17" class="capture-check" data-proof-target="cap17" type="checkbox"/></td>
+</tr><tr>
+<td>Capture 18</td>
+<td>Montrez la copie.</td>
+<td class="check-cell"><input aria-label="Capture 18" class="capture-check" data-proof-target="cap18" type="checkbox"/></td>
+</tr><tr>
+<td>Capture 19</td>
+<td>Montrez la simulation puis la suppression réelle.</td>
+<td class="check-cell"><input aria-label="Capture 19" class="capture-check" data-proof-target="cap19" type="checkbox"/></td>
+</tr><tr>
+<td>Capture 20</td>
+<td>Montrez le ou les fichiers trouvés.</td>
+<td class="check-cell"><input aria-label="Capture 20" class="capture-check" data-proof-target="cap20" type="checkbox"/></td>
+</tr><tr>
+<td>Capture 21</td>
+<td>Montrez le résultat et la variable $limite.</td>
+<td class="check-cell"><input aria-label="Capture 21" class="capture-check" data-proof-target="cap21" type="checkbox"/></td>
+</tr><tr>
+<td>Capture 22</td>
+<td>Montrez les deux résultats.</td>
+<td class="check-cell"><input aria-label="Capture 22" class="capture-check" data-proof-target="cap22" type="checkbox"/></td>
+</tr><tr>
+<td>Capture 23</td>
+<td>Montrez au moins un tri correct.</td>
+<td class="check-cell"><input aria-label="Capture 23" class="capture-check" data-proof-target="cap23" type="checkbox"/></td>
+</tr><tr>
+<td>Capture 24</td>
+<td>Montrez les hash calculés.</td>
+<td class="check-cell"><input aria-label="Capture 24" class="capture-check" data-proof-target="cap24" type="checkbox"/></td>
+</tr><tr>
+<td>Capture 25</td>
+<td>Montrez qu’un groupe de doublons est détecté.</td>
+<td class="check-cell"><input aria-label="Capture 25" class="capture-check" data-proof-target="cap25" type="checkbox"/></td>
+</tr><tr>
+<td>Capture 26</td>
+<td>Montrez la simulation avec -whatif.</td>
+<td class="check-cell"><input aria-label="Capture 26" class="capture-check" data-proof-target="cap26" type="checkbox"/></td>
+</tr><tr>
+<td>Capture 27</td>
+<td>Montrez le dossier downloads_test après le rangement.</td>
+<td class="check-cell"><input aria-label="Capture 27" class="capture-check" data-proof-target="cap27" type="checkbox"/></td>
+</tr><tr>
+<td>Capture 28</td>
+<td>Montrez au moins deux sous-dossiers créés automatiquement, par exemple jpg et pdf.</td>
+<td class="check-cell"><input aria-label="Capture 28" class="capture-check" data-proof-target="cap28" type="checkbox"/></td>
+</tr><tr>
+<td>Capture 29</td>
+<td>Montrez au moins une ou deux règles d’accès.</td>
+<td class="check-cell"><input aria-label="Capture 29" class="capture-check" data-proof-target="cap29" type="checkbox"/></td>
+</tr><tr>
+<td>Capture 30</td>
+<td>Montrez la commande de copie d’acl puis la vérification.</td>
+<td class="check-cell"><input aria-label="Capture 30" class="capture-check" data-proof-target="cap30" type="checkbox"/></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</section>
+<section class="section-block line-section">
+<h3 class="section-title" id="p9-s2">Rappel utile pour éviter les blocages</h3>
+<div class="section-body">
+<p>Si une commande ne fonctionne pas, commencez toujours par vérifier ces trois points essentiels.</p>
+<section class="snippet-embed">
+<section class="code-window theme-powershell">
+<div class="window-header">
+<div class="window-controls"><span></span><span></span><span></span></div>
+<div class="window-title">diagnostic_rapide.ps1</div>
+<button class="copy-btn" data-copy-mode="plain" data-copy-target="ps-diagnostic" type="button">Copier</button>
+</div>
+<div class="code-body">
+<div class="terminal-intro">PS C:\Users\Etudiant&gt;</div>
+<div class="code-content" id="ps-diagnostic">
+<div class="line" data-copy="Get-Location"><span class="line-no">1</span><span class="line-text">Get-Location</span></div>
+<div class="line" data-copy="Test-Path $LabRoot"><span class="line-no">2</span><span class="line-text">Test-Path $LabRoot</span></div>
+<div class="line" data-copy="Get-ChildItem $LabRoot"><span class="line-no">3</span><span class="line-text">Get-ChildItem $LabRoot</span></div>
+</div>
+</div>
+</section>
+</section>
+<ul><li>Si un dossier ou un fichier manque, relancez simplement la préparation obligatoire de l’environnement au début du TP.</li><li>Si un chemin contient une erreur, copiez le chemin exact depuis ce document et remplacez seulement le nom du fichier ou du dossier demandé.</li><li>Si un résultat est vide, ce n’est pas forcément une erreur. Vérifiez d’abord si le dossier contient bien des fichiers adaptés à la commande.</li></ul>
+</div>
+</section>
+<section class="section-block line-section">
+<h3 class="section-title" id="p9-s3">Petite synthèse à retenir</h3>
+<div class="section-body">
+<p>À la fin de ce TP-lecture, vous devez savoir distinguer clairement le rôle des commandes suivantes.</p>
+<ul><li><strong>New-Item</strong> : créer</li><li><strong>Get-ChildItem</strong> : lister</li><li><strong>Rename-Item</strong> : renommer</li><li><strong>Move-Item</strong> : déplacer</li><li><strong>Copy-Item</strong> : copier</li><li><strong>Remove-Item</strong> : supprimer</li><li><strong>Get-Content</strong> : lire un fichier texte</li><li><strong>Set-Content</strong> : remplacer le contenu d’un fichier</li><li><strong>Add-Content</strong> : ajouter du contenu</li><li><strong>Out-File</strong> : envoyer la sortie d’une commande dans un fichier</li><li><strong>Get-FileHash</strong> : comparer le contenu réel des fichiers</li><li><strong>Get-Acl</strong> et <strong>Set-Acl</strong> : consulter ou appliquer des permissions</li></ul>
+<div class="callout spaced-block">
+<strong>À saisir :</strong> Parmi toutes les commandes du TP, choisissez-en trois et expliquez à quoi elles servent avec vos propres mots.
+<div class="answer-area">
+<textarea class="team-input answerbox-large" id="p9-answer" placeholder="Écris ici ta réponse..."></textarea>
+</div>
+</div>
+</div>
+</section>
+</div>
+</section>
+<section class="part" id="partie-qcm">
+<div class="part-header"><h2 class="part-title">QCM de validation</h2></div>
+<div class="part-body">
+<div class="callout spaced-block qcm-intro"><strong>Consigne :</strong> cochez la bonne réponse pour chaque question. Une seule réponse est correcte par question.</div>
+<section class="section-block qcm-block" data-correct="B">
+<h3 class="section-title"><span class="qcm-badge">Question 1</span></h3>
+<div class="section-body">
+<p class="qcm-question">Quelle variable doit contenir la racine du dossier de laboratoire dans ce TP ?</p>
+<div class="qcm-options">
+<label class="qcm-option"><input name="qcm_q1" type="radio" value="A"/><span class="qcm-option-text">$HomeLab</span></label><label class="qcm-option"><input name="qcm_q1" type="radio" value="B"/><span class="qcm-option-text">$LabRoot</span></label><label class="qcm-option"><input name="qcm_q1" type="radio" value="C"/><span class="qcm-option-text">$TargetFolder</span></label><label class="qcm-option"><input name="qcm_q1" type="radio" value="D"/><span class="qcm-option-text">$PathRoot</span></label>
+</div>
+</div>
+</section><section class="section-block qcm-block" data-correct="C">
+<h3 class="section-title"><span class="qcm-badge">Question 2</span></h3>
+<div class="section-body">
+<p class="qcm-question">Dans ce TP, quel paramètre est particulièrement important lorsqu’on copie un dossier contenant lui-même des éléments ?</p>
+<div class="qcm-options">
+<label class="qcm-option"><input name="qcm_q2" type="radio" value="A"/><span class="qcm-option-text">-File</span></label><label class="qcm-option"><input name="qcm_q2" type="radio" value="B"/><span class="qcm-option-text">-Force</span></label><label class="qcm-option"><input name="qcm_q2" type="radio" value="C"/><span class="qcm-option-text">-Recurse</span></label><label class="qcm-option"><input name="qcm_q2" type="radio" value="D"/><span class="qcm-option-text">-Filter</span></label>
+</div>
+</div>
+</section><section class="section-block qcm-block" data-correct="D">
+<h3 class="section-title"><span class="qcm-badge">Question 3</span></h3>
+<div class="section-body">
+<p class="qcm-question">Quelle commande remplace le contenu existant d’un fichier texte avant d’écrire une nouvelle valeur ?</p>
+<div class="qcm-options">
+<label class="qcm-option"><input name="qcm_q3" type="radio" value="A"/><span class="qcm-option-text">Add-Content</span></label><label class="qcm-option"><input name="qcm_q3" type="radio" value="B"/><span class="qcm-option-text">Get-Content</span></label><label class="qcm-option"><input name="qcm_q3" type="radio" value="C"/><span class="qcm-option-text">Out-File</span></label><label class="qcm-option"><input name="qcm_q3" type="radio" value="D"/><span class="qcm-option-text">Set-Content</span></label>
+</div>
+</div>
+</section><section class="section-block qcm-block" data-correct="B">
+<h3 class="section-title"><span class="qcm-badge">Question 4</span></h3>
+<div class="section-body">
+<p class="qcm-question">Quelle commande sert à comparer le contenu réel de fichiers pour repérer des doublons ?</p>
+<div class="qcm-options">
+<label class="qcm-option"><input name="qcm_q4" type="radio" value="A"/><span class="qcm-option-text">Get-Acl</span></label><label class="qcm-option"><input name="qcm_q4" type="radio" value="B"/><span class="qcm-option-text">Get-FileHash</span></label><label class="qcm-option"><input name="qcm_q4" type="radio" value="C"/><span class="qcm-option-text">Move-Item</span></label><label class="qcm-option"><input name="qcm_q4" type="radio" value="D"/><span class="qcm-option-text">Sort-Object</span></label>
+</div>
+</div>
+</section><section class="section-block qcm-block" data-correct="C">
+<h3 class="section-title"><span class="qcm-badge">Question 5</span></h3>
+<div class="section-body">
+<p class="qcm-question">Pourquoi le TP demande-t-il souvent d’utiliser d’abord -WhatIf ?</p>
+<div class="qcm-options">
+<label class="qcm-option"><input name="qcm_q5" type="radio" value="A"/><span class="qcm-option-text">Pour afficher uniquement les fichiers cachés.</span></label><label class="qcm-option"><input name="qcm_q5" type="radio" value="B"/><span class="qcm-option-text">Pour modifier automatiquement les ACL.</span></label><label class="qcm-option"><input name="qcm_q5" type="radio" value="C"/><span class="qcm-option-text">Pour simuler une action sensible avant de l’exécuter réellement.</span></label><label class="qcm-option"><input name="qcm_q5" type="radio" value="D"/><span class="qcm-option-text">Pour compresser les fichiers avant suppression.</span></label>
+</div>
+</div>
+</section>
+</div>
+</section>
+<section class="card" id="export">
+<h2>Exporter en PDF</h2>
+<ul class="list">
+<li>Vérifiez que toutes les captures obligatoires sont visibles dans la page.</li>
+<li>Vérifiez que vos réponses rédigées sont complètes et lisibles.</li>
+<li>Cliquez sur <strong>Exporter en PDF</strong>, puis choisissez <strong>Enregistrer en PDF</strong>.</li>
+<li>Remettez ensuite le fichier PDF selon la consigne donnée.</li>
+</ul>
+<div aria-label="Export" class="exportbar exportbar-spaced render-export">
+<button class="actionbtn" id="exportPdf" type="button">Exporter en PDF</button>
+</div>
+<div class="callout spaced-block export-callout">
+<strong>Important :</strong> si une capture, une réponse ou une information n’apparaît pas dans la page avant l’export, elle ne sera pas dans le PDF.
+</div>
+</section>
+<footer class="course-footer">
+<div class="course-footer-left">Version 2026</div>
+<div class="course-footer-right">© <a class="footer-author-link" href="droits.html">Anis Ghaieb</a> — Support pédagogique original — Tous droits réservés</div>
+</footer>
+</main>
+</body>
+</html>
