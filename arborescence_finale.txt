@@ -1,0 +1,13 @@
+pack_labo_powershell_fichiers/
+├── labo_lecture_gestion_fichiers_dossiers_powershell.html
+├── style.css
+├── style_print.css
+├── script.js
+├── unified_style.css
+├── unified_script.js
+├── droits.html
+└── img/
+    ├── anis.png
+    ├── chap.png
+    ├── college.png
+    └── pc.png
